@@ -39,18 +39,17 @@
 	$$.module(debugName);
 
 
-	$$.test('modulejs', 8, function () {
+	$$.test('modulejs', 7, function () {
 
 		var ref = debugApi.modulejs,
 			refName = 'modulejs';
 
-		$$.strictEqual(_.size(ref), 7, refName + ' has right number of members');
+		$$.strictEqual(_.size(ref), 6, refName + ' has right number of members');
 
 		$$.strictEqual(_.isObject(ref.definitions), true, refName + '.definitions is object');
 		$$.strictEqual(_.isObject(ref.instances), true, refName + '.instances is object');
 
 		$$.strictEqual(_.isFunction(ref.define), true, refName + '.define is function');
-		$$.strictEqual(_.isFunction(ref.predefined), true, refName + '.predefined is function');
 		$$.strictEqual(_.isFunction(ref._require), true, refName + '._require is function');
 		$$.strictEqual(_.isFunction(ref.require), true, refName + '.require is function');
 

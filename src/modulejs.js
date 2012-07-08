@@ -37,44 +37,25 @@
 		// define
 		// ------
 		// Defines a module.
-		self.define = function (id, deps, fn) {
+		self.define = function (id, deps, arg) {
 
 			// sort arguments
-			if (_.isFunction(deps)) {
-				fn = deps;
+			if (arg === undefined) {
+				arg = deps;
 				deps = [];
 			}
 			// check arguments
 			err(!_.isString(id), 11, 'id must be a string "' + id + '"');
 			err(self.definitions[id], 12, 'id already defined "' + id + '"');
-			err(!_.isFunction(fn), 13, 'constructor for "' + id + '" must be a function "' + fn + '"');
-			err(!_.isArray(deps), 14, 'dependencies for "' + id + '" must be an array "' + deps + '"');
+			err(!_.isArray(deps), 13, 'dependencies for "' + id + '" must be an array "' + deps + '"');
+			err(!_.isObject(arg) && !_.isFunction(arg), 14, 'arg for "' + id + '" must be object or function "' + arg + '"');
 
 			// map definition
 			self.definitions[id] = {
 				id: id,
 				deps: deps,
-				fn: fn
+				fn: _.isFunction(arg) ? arg : function () { return arg; }
 			};
-		};
-
-		// predefined
-		// ----------
-		// Registers a predefined object.
-		self.predefined = function (id, instance, check) {
-
-			if (_.isFunction(check)) {
-				check = !!check();
-			}
-			if (!_.isBoolean(check)) {
-				check = instance !== undefined;
-			}
-			err(!check, 21, 'check for predefined "' + id + '" failed');
-
-			self.define(id, [], function () {
-
-				return instance;
-			});
 		};
 
 		// Returns an instance for `id`, checked against require-`stack` for
@@ -138,7 +119,6 @@
 			var	previous = global[name],
 				api = {
 					define: self.define,
-					predefined: self.predefined,
 					require: self.require,
 					noConflict: function () {
 

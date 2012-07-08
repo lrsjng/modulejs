@@ -26,16 +26,15 @@
 	$$.module('global');
 
 
-	$$.test(name, 6, function () {
+	$$.test(name, 5, function () {
 
 		var ref = api,
 			refName = name;
 
 		$$.strictEqual(_.isObject(api), true, name + ' is global object');
-		$$.strictEqual(_.size(api), 3 + 1, name + ' has right number of members');
+		$$.strictEqual(_.size(api), 2 + 1, name + ' has right number of members');
 
 		$$.strictEqual(_.isFunction(api.define), true, name + '.define is function');
-		$$.strictEqual(_.isFunction(api.predefined), true, name + '.predefined is function');
 		$$.strictEqual(_.isFunction(api.require), true, name + '.require is function');
 
 		$$.strictEqual(_.isFunction(api.noConflict), true, name + '.noConflict is function');
@@ -47,37 +46,24 @@
 	$$.module(name);
 
 
-	$$.test('define', 9, function () {
+	$$.test('define', 12, function () {
 
 		$$error(function () { api.define(); }, 11, 'define with no arguments throws exception');
-		$$error(function () { api.define('def-a'); }, 13, 'define with no constructor argument throws exception');
-		$$error(function () { api.define('def-b', []); }, 13, 'define with no constructor argument throws exception');
+		$$error(function () { api.define('def-a'); }, 14, 'define with no constructor or object argument throws exception');
 		$$error(function () { api.define(true, [], function () {}); }, 11, 'define with non-string id throws exception');
-		$$error(function () { api.define('def-c', true, function () {}); }, 14, 'define with non-array dependencies throws exception');
-		$$error(function () { api.define('def-d', [], true); }, 13, 'define with non-function constructor throws exception');
+		$$error(function () { api.define('def-b', true, function () {}); }, 13, 'define with non-array dependencies throws exception');
+		$$error(function () { api.define('def-c', [], true); }, 14, 'define with non-function and non-object argument throws exception');
 
-		$$.strictEqual(api.define('def-e', function () {}), undefined, 'define with no dependencies');
-		$$error(function () { api.define('def-e', function () {}); }, 12, 'define with already defined id throws exception');
+		$$.strictEqual(api.define('def-d', function () {}), undefined, 'define with no dependencies and function');
+		$$.strictEqual(api.define('def-e', [], function () {}), undefined, 'define with dependencies and function');
 
-		$$.strictEqual(api.define('def-f', [], function () {}), undefined, 'define with dependencies');
-	});
+		$$.strictEqual(api.define('def-f', {}), undefined, 'define with no dependencies and function');
+		$$.strictEqual(api.define('def-g', [], {}), undefined, 'define with dependencies and function');
 
+		$$error(function () { api.define('def-g', {}); }, 12, 'define with already defined id throws exception');
 
-	$$.test('predefined', 10, function () {
-
-		$$error(function () { api.predefined(); }, 21, 'predefined with no arguments throws exception');
-		$$error(function () { api.predefined('predef-a'); }, 21, 'predefined with no instance argument throws exception');
-		$$error(function () { api.predefined(true, {}); }, 11, 'predefined with non-string id throws exception');
-
-		$$.strictEqual(api.predefined('predef-b', {}), undefined, 'predefined with no check');
-		$$error(function () { api.predefined('predef-b', {}); }, 12, 'predefined with already defined id throws exception');
-		$$error(function () { api.predefined('predef-c', undefined); }, 21, 'predefined with undefined instance argument throws exception');
-
-		$$.strictEqual(api.predefined('predef-d', {}, true), undefined, 'predefined with true boolean check');
-		$$error(function () { api.predefined('predef-e', {}, false); }, 21, 'predefined with false boolean check throws exception');
-
-		$$.strictEqual(api.predefined('predef-f', {}, function () { return true; }), undefined, 'predefined with true functional check');
-		$$error(function () { api.predefined('predef-g', {}, function () { return false; }); }, 21, 'predefined with false functional check throws exception');
+		$$.strictEqual(api.define('def-h', []), undefined, 'define with id and array handles array as object with no dependencies');
+		$$.strictEqual(api.define('def-i', [], []), undefined, 'define with id and two arrays');
 	});
 
 
