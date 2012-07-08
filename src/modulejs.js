@@ -10,7 +10,10 @@
 		if (condition) {
 			throw {
 				code: code,
-				msg: name + ' error: ' + message
+				msg: message,
+				toString: function () {
+					return name + ' error: ' + message;
+				}
 			};
 		}
 	};
