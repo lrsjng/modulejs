@@ -1,26 +1,55 @@
 /*! %BUILD_NAME% %BUILD_VERSION% - //larsjung.de/qrcode - MIT License */
 
-(function (global, _, name) {
+(function (global, name) {
 	'use strict';
 
 
-	// throws error
+		// throws error
 	var	err = function (condition, code, message) {
 
-		if (condition) {
-			throw {
-				code: code,
-				msg: message,
-				toString: function () {
-					return name + ' error: ' + message;
+			if (condition) {
+				throw {
+					code: code,
+					msg: message,
+					toString: function () {
+						return name + ' error: ' + message;
+					}
+				};
+			}
+		},
+		isType = function (arg, type) {
+
+			return Object.prototype.toString.call(arg) === '[object ' + type + ']';
+		},
+		isString = function (arg) {
+
+			return isType(arg, 'String');
+		},
+		isFunction = function (arg) {
+
+			return isType(arg, 'Function');
+		},
+		isRegExp = function (arg) {
+
+			return isType(arg, 'RegExp');
+		},
+		isArray = Array.isArray || function (arg) {
+
+			return isType(arg, 'Array');
+		},
+		isObject = function(arg) {
+
+			return arg === new Object(arg);
+		},
+		contains = function(array, item) {
+
+			for (var i = 0, l = array.length; i < l; i += 1) {
+				if (array[i] === item) {
+					return true;
 				}
-			};
-		}
-	};
-
-	// make sure underscore is loaded
-	err(!_, 1, name + ' requires underscore');
-
+			}
+			return false;
+		};
 
 	// ModuleJs
 	// ========
@@ -45,16 +74,16 @@
 				deps = [];
 			}
 			// check arguments
-			err(!_.isString(id), 11, 'id must be a string "' + id + '"');
+			err(!isString(id), 11, 'id must be a string "' + id + '"');
 			err(self.definitions[id], 12, 'id already defined "' + id + '"');
-			err(!_.isArray(deps), 13, 'dependencies for "' + id + '" must be an array "' + deps + '"');
-			err(!_.isObject(arg) && !_.isFunction(arg), 14, 'arg for "' + id + '" must be object or function "' + arg + '"');
+			err(!isArray(deps), 13, 'dependencies for "' + id + '" must be an array "' + deps + '"');
+			err(!isObject(arg) && !isFunction(arg), 14, 'arg for "' + id + '" must be object or function "' + arg + '"');
 
 			// map definition
 			self.definitions[id] = {
 				id: id,
 				deps: deps,
-				fn: _.isFunction(arg) ? arg : function () { return arg; }
+				fn: isFunction(arg) ? arg : function () { return arg; }
 			};
 		};
 
@@ -62,9 +91,9 @@
 		// cyclic dependencies.
 		self._require = function (id, stack) {
 
-			err(!_.isString(id), 31, 'id must be a string "' + id + '"');
+			err(!isString(id), 31, 'id must be a string "' + id + '"');
 
-			if (_.has(self.instances, id)) {
+			if (self.instances.hasOwnProperty(id)) {
 				return self.instances[id];
 			}
 
@@ -73,12 +102,15 @@
 
 			stack = (stack || []).slice(0);
 			stack.push(id);
-			var deps = _.map(def.deps, function (depId) {
 
-				err(_.indexOf(stack, depId) >= 0, 33, 'cyclic dependencies: ' + stack + ' & ' + depId);
-
-				return self._require(depId, stack);
-			});
+			var deps = [];
+			for (var idx in def.deps) {
+				if (def.deps.hasOwnProperty(idx)) {
+					var depId = def.deps[idx];
+					err(contains(stack, depId), 33, 'cyclic dependencies: ' + stack + ' & ' + depId);
+					deps[idx] = self._require(depId, stack);
+				}
+			}
 
 			var obj = def.fn.apply(global, deps);
 			self.instances[id] = obj;
@@ -90,23 +122,27 @@
 		// Returns an instance for `id`.
 		self.require = function (arg) {
 
-			if (_.isArray(arg)) {
+			var res;
 
-				return _.map(arg, function (id) {
+			if (isArray(arg)) {
 
-					return self._require(id);
-				});
+				res = [];
+				for (var idx in arg) {
+					if (arg.hasOwnProperty(idx)) {
+						res[idx] = self._require(arg[idx]);
+					}
+				}
+				return res;
 			}
 
-			if (_.isRegExp(arg)) {
+			if (isRegExp(arg)) {
 
-				var res = {};
-				_.each(_.keys(self.definitions), function (id) {
-
-					if (arg.test(id)) {
+				res = {};
+				for (var id in self.definitions) {
+					if (self.definitions.hasOwnProperty(id) && arg.test(id)) {
 						res[id] = self._require(id);
 					}
-				});
+				}
 				return res;
 			}
 
@@ -141,8 +177,8 @@
 	// debugger
 	// --------
 	var debugName = name.toUpperCase();
-	if (_.isFunction(global[debugName])) {
+	if (isFunction(global[debugName])) {
 		global[debugName] = new global[debugName](modulejs);
 	}
 
-}(this, _, '%BUILD_NAME%'));
+}(this, '%BUILD_NAME%'));
