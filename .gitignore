@@ -1,0 +1,8 @@
+
+build
+release
+
+# local files
+build.local.xml
+*.sublime-*
+.ant-targets-*
