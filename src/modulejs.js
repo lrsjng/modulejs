@@ -1,4 +1,4 @@
-/*! %BUILD_NAME% %BUILD_VERSION% - //larsjung.de/qrcode - MIT License */
+/*! modulejs %BUILD_VERSION% - //larsjung.de/modulejs - MIT License */
 
 (function (global, name) {
 	'use strict';
@@ -12,7 +12,7 @@
 					code: code,
 					msg: message,
 					toString: function () {
-						return name + ' error: ' + message;
+						return name + ' error ' + code + ': ' + message;
 					}
 				};
 			}
@@ -37,9 +37,13 @@
 
 			return isType(arg, 'Array');
 		},
-		isObject = function(arg) {
+		isObject = function (arg) {
 
 			return arg === new Object(arg);
+		},
+		has = function (arg, id) {
+
+			return Object.prototype.hasOwnProperty.call(arg, id);
 		},
 		contains = function(array, item) {
 
@@ -50,6 +54,7 @@
 			}
 			return false;
 		};
+
 
 	// ModuleJs
 	// ========
@@ -93,7 +98,7 @@
 
 			err(!isString(id), 31, 'id must be a string "' + id + '"');
 
-			if (self.instances.hasOwnProperty(id)) {
+			if (has(self.instances, id)) {
 				return self.instances[id];
 			}
 
@@ -105,7 +110,7 @@
 
 			var deps = [];
 			for (var idx in def.deps) {
-				if (def.deps.hasOwnProperty(idx)) {
+				if (has(def.deps, idx)) {
 					var depId = def.deps[idx];
 					err(contains(stack, depId), 33, 'cyclic dependencies: ' + stack + ' & ' + depId);
 					deps[idx] = self._require(depId, stack);
@@ -128,7 +133,7 @@
 
 				res = [];
 				for (var idx in arg) {
-					if (arg.hasOwnProperty(idx)) {
+					if (has(arg, idx)) {
 						res[idx] = self._require(arg[idx]);
 					}
 				}
@@ -139,7 +144,7 @@
 
 				res = {};
 				for (var id in self.definitions) {
-					if (self.definitions.hasOwnProperty(id) && arg.test(id)) {
+					if (has(self.definitions, id) && arg.test(id)) {
 						res[id] = self._require(id);
 					}
 				}
@@ -148,37 +153,24 @@
 
 			return self._require(arg);
 		};
-
-		// Registers public API on the global object.
-		self.register = function (name) {
-
-			var	previous = global[name],
-				api = {
-					define: self.define,
-					require: self.require,
-					noConflict: function () {
-
-						if (global[name] === api) {
-							global[name] = previous;
-						}
-						return api;
-					}
-				};
-
-			global[name] = api;
-		};
 	};
 
 
 	var modulejs = new ModuleJs();
-	modulejs.register(name);
 
+	// public api
+	// ----------
+	global[name] = {
+		define: modulejs.define,
+		require: modulejs.require
+	};
 
-	// debugger
-	// --------
-	var debugName = name.toUpperCase();
-	if (isFunction(global[debugName])) {
-		global[debugName] = new global[debugName](modulejs);
+	// debug api
+	// ---------
+	var debug = global[(name + '_DEBUG').toUpperCase()];
+	if (isFunction(debug)) {
+		global[name] = debug(modulejs);
 	}
 
-}(this, '%BUILD_NAME%'));
+
+}(this, 'modulejs'));

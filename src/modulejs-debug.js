@@ -1,46 +1,128 @@
-/*! %BUILD_NAME%-debug %BUILD_VERSION% - //larsjung.de/qrcode - MIT License */
+/*! modulejs-debug %BUILD_VERSION% - //larsjung.de/modulejs - MIT License */
 
-(function (global, _, name) {
+(function (global, name) {
 	'use strict';
 
 
-	var Debugger = function (modulejs) {
+		// throws error
+	var	err = function (condition, code, message) {
+
+			if (condition) {
+				throw {
+					code: code,
+					msg: message,
+					toString: function () {
+						return name + ' error ' + code + ': ' + message;
+					}
+				};
+			}
+		},
+		isType = function (arg, type) {
+
+			return Object.prototype.toString.call(arg) === '[object ' + type + ']';
+		},
+		isString = function (arg) {
+
+			return isType(arg, 'String');
+		},
+		isFunction = function (arg) {
+
+			return isType(arg, 'Function');
+		},
+		isRegExp = function (arg) {
+
+			return isType(arg, 'RegExp');
+		},
+		isArray = Array.isArray || function (arg) {
+
+			return isType(arg, 'Array');
+		},
+		isObject = function (arg) {
+
+			return arg === new Object(arg);
+		},
+		has = function (arg, id) {
+
+			return Object.prototype.hasOwnProperty.call(arg, id);
+		},
+		contains = function (array, item) {
+
+			for (var i = 0, l = array.length; i < l; i += 1) {
+				if (array[i] === item) {
+					return true;
+				}
+			}
+			return false;
+		},
+		uniq = function (array) {
+
+			var elements = {},
+				result = [];
+
+			for (var i = 0, l = array.length; i < l; i += 1) {
+				var el = array[i];
+				if (!has(elements, el)) {
+					result.push(el);
+					elements[el] = 1;
+				}
+			}
+
+			return result;
+		},
+		each = function (obj, iterator, context) {
+
+			if (!obj) {
+				return;
+			}
+			if (Array.prototype.forEach && obj.forEach === Array.prototype.forEach) {
+				obj.forEach(iterator, context);
+			} else if (obj.length === +obj.length) {
+				for (var i = 0, l = obj.length; i < l; i += 1) {
+					iterator.call(context, obj[i], i, obj);
+				}
+			} else {
+				for (var key in obj) {
+					if (has(obj, key)) {
+						iterator.call(context, obj[key], key, obj);
+					}
+				}
+			}
+		};
 
 
-		var self = this;
+
+	// Debug
+	// =====
+	var Debug = function (modulejs) {
 
 
-		self.modulejs = modulejs;
+		var self = modulejs;
 
 
 		self.clear = function () {
 
-			modulejs.definitions = {};
-			modulejs.instances = {};
+			self.definitions = {};
+			self.instances = {};
 		};
 
 
 		self.isDefined = function (id) {
 
-			return _.isString(id) && !!modulejs.definitions[id];
+			return isString(id) && !!self.definitions[id];
 		};
 
 
 		self.ids = function (regexp) {
 
-			var ids = _.map(modulejs.definitions, function (def) {
+			var ids = [];
 
-					return def.id;
-				});
-
-			if (!_.isRegExp(regexp)) {
-				return ids;
+			for (var id in self.definitions) {
+				if (has(self.definitions, id) && (!isRegExp(regexp) || regexp.test(id))) {
+					id.push(id);
+				}
 			}
 
-			return _.filter(ids, function (id) {
-
-				return regexp.test(id);
-			});
+			return ids;
 		};
 
 
@@ -48,13 +130,13 @@
 
 			var deps = [];
 
-			var def = modulejs.definitions[id];
+			var def = self.definitions[id];
 			if (def) {
 				stack = (stack || []).slice(0);
 				stack.push(id);
-				_.each(def.deps, function (depId) {
+				each(def.deps, function (depId) {
 
-					if (_.indexOf(stack, depId) >= 0) {
+					if (contains(stack, depId)) {
 						deps = deps.concat([false, def.id]);
 						return deps;
 					}
@@ -64,27 +146,27 @@
 				});
 			}
 
-			return _.uniq(deps);
+			return uniq(deps);
 		};
 
 
 		self.deps = function (ids) {
 
-			if (_.isString(ids)) {
+			if (isString(ids)) {
 
 				return _deps(ids);
-			} else if (_.isArray(ids)) {
+			} else if (isArray(ids)) {
 
 				var deps = [];
-				_.each(ids, function (id) {
+				each(ids, function (id) {
 
 					deps = deps.concat(_deps(id));
 				});
-				return _.uniq(deps);
+				return uniq(deps);
 			}
 
 			var res = {};
-			_.each(modulejs.definitions, function (def, id) {
+			each(self.definitions, function (def, id) {
 
 				res[id] = _deps(id);
 			});
@@ -99,35 +181,38 @@
 				out = '\n';
 
 			if (!showInvDeps) {
-				_.each(allDeps, function (deps, id) {
+				each(allDeps, function (deps, id) {
 
-					out += (_.has(modulejs.instances, id) ? '* ' : '  ') + id + ' -> [ ' + deps.join(', ') + ' ]\n';
+					out += (has(self.instances, id) ? '* ' : '  ') + id + ' -> [ ' + deps.join(', ') + ' ]\n';
 				});
 			} else {
-				_.each(modulejs.definitions, function (def) {
+				each(self.definitions, function (def) {
 
 					var invDeps = [];
-					_.each(allDeps, function (depIds, id) {
+					each(allDeps, function (depIds, id) {
 
-						if (_.indexOf(depIds, def.id) >= 0) {
+						if (contains(depIds, def.id)) {
 							invDeps.push(id);
 						}
 					});
 					allInvDeps[def.id] = invDeps;
 				});
 
-				_.each(allInvDeps, function (invDeps, id) {
+				each(allInvDeps, function (invDeps, id) {
 
-					out += (_.has(modulejs.instances, id) ? '* ' : '  ') + id + ' <- [ ' + invDeps.join(', ') + ' ]\n';
+					out += (has(self.instances, id) ? '* ' : '  ') + id + ' <- [ ' + invDeps.join(', ') + ' ]\n';
 				});
 			}
 
 			return out;
 		};
+
+
+		return self;
 	};
 
 
-	global[name.toUpperCase()] = Debugger;
+	global[(name + '_DEBUG').toUpperCase()] = Debug;
 
 
-}(this, _, '%BUILD_NAME%'));
+}(this, 'modulejs'));
