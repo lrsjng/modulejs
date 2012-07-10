@@ -9,9 +9,10 @@ modulejs is provided under the terms of the [MIT License](http://github.com/lrsj
 ## Changelog
 
 
-### v0.2 - *2012-??*
+### v0.2 - *2012-07-11*
 
-* 
+* Refactors
+* Adds tests
 
 
 ### v0.1 - *2012-07-08*
