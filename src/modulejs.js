@@ -1,165 +1,247 @@
-/*! %BUILD_NAME% %BUILD_VERSION% - //larsjung.de/qrcode - MIT License */
+/*! modulejs %BUILD_VERSION% - //larsjung.de/modulejs - MIT License */
 
-(function (global, _, name) {
+(function (global, name) {
 	'use strict';
 
 
-	// throws error
-	var	err = function (condition, code, message) {
+	var objProto = Object.prototype,
+		arrayForEach = Array.prototype.forEach,
+		isType = function (arg, type) {
 
-		if (condition) {
-			throw {
-				code: code,
-				msg: name + ' error: ' + message
-			};
-		}
-	};
+			return objProto.toString.call(arg) === '[object ' + type + ']';
+		},
+		isString = function (arg) {
 
-	// make sure underscore is loaded
-	err(!_, 1, name + ' requires underscore');
+			return isType(arg, 'String');
+		},
+		isFunction = function (arg) {
 
+			return isType(arg, 'Function');
+		},
+		isArray = Array.isArray || function (arg) {
 
-	// ModuleJs
-	// ========
-	var ModuleJs = function () {
+			return isType(arg, 'Array');
+		},
+		isObject = function (arg) {
 
-		var self = this;
+			return arg === new Object(arg);
+		},
+		has = function (arg, id) {
 
-		// module definitions
-		self.definitions = {};
+			return objProto.hasOwnProperty.call(arg, id);
+		},
+		each = function (obj, iterator, context) {
 
-		// module instances
-		self.instances = {};
-
-		// define
-		// ------
-		// Defines a module.
-		self.define = function (id, deps, fn) {
-
-			// sort arguments
-			if (_.isFunction(deps)) {
-				fn = deps;
-				deps = [];
+			if (arrayForEach && obj.forEach === arrayForEach) {
+				obj.forEach(iterator, context);
+			} else if (obj.length === +obj.length) {
+				for (var i = 0, l = obj.length; i < l; i += 1) {
+					iterator.call(context, obj[i], i, obj);
+				}
+			} else {
+				for (var key in obj) {
+					if (has(obj, key)) {
+						iterator.call(context, obj[key], key, obj);
+					}
+				}
 			}
-			// check arguments
-			err(!_.isString(id), 11, 'id must be a string "' + id + '"');
-			err(self.definitions[id], 12, 'id already defined "' + id + '"');
-			err(!_.isFunction(fn), 13, 'constructor for "' + id + '" must be a function "' + fn + '"');
-			err(!_.isArray(deps), 14, 'dependencies for "' + id + '" must be an array "' + deps + '"');
+		},
+		contains = function (array, item) {
 
-			// map definition
-			self.definitions[id] = {
-				id: id,
-				deps: deps,
-				fn: fn
-			};
-		};
-
-		// predefined
-		// ----------
-		// Registers a predefined object.
-		self.predefined = function (id, instance, check) {
-
-			if (_.isFunction(check)) {
-				check = !!check();
+			for (var i = 0, l = array.length; i < l; i += 1) {
+				if (array[i] === item) {
+					return true;
+				}
 			}
-			if (!_.isBoolean(check)) {
-				check = instance !== undefined;
-			}
-			err(!check, 21, 'check for predefined "' + id + '" failed');
+			return false;
+		},
+		uniq = function (array) {
 
-			self.define(id, [], function () {
+			var elements = {},
+				result = [];
 
-				return instance;
+			each(array, function (el) {
+
+				if (!has(elements, el)) {
+					result.push(el);
+					elements[el] = 1;
+				}
 			});
-		};
 
-		// Returns an instance for `id`, checked against require-`stack` for
-		// cyclic dependencies.
-		self._require = function (id, stack) {
+			return result;
+		},
+		err = function (condition, code, message) {
 
-			err(!_.isString(id), 31, 'id must be a string "' + id + '"');
+			if (condition) {
+				throw {
+					code: code,
+					msg: message,
+					toString: function () {
+						return name + ' error ' + code + ': ' + message;
+					}
+				};
+			}
+		},
 
-			if (_.has(self.instances, id)) {
-				return self.instances[id];
+		// Module definitions.
+		definitions = {},
+
+		// Module instances.
+		instances = {},
+
+		resolve = function (id, cold, stack) {
+
+			err(!isString(id), 31, 'id must be a string "' + id + '"');
+
+			if (!cold && has(instances, id)) {
+				return instances[id];
 			}
 
-			var def = self.definitions[id];
+			var def = definitions[id];
 			err(!def, 32, 'id not defined "' + id + '"');
 
 			stack = (stack || []).slice(0);
 			stack.push(id);
-			var deps = _.map(def.deps, function (depId) {
 
-				err(_.indexOf(stack, depId) >= 0, 33, 'cyclic dependencies: ' + stack + ' & ' + depId);
+			var deps = [];
 
-				return self._require(depId, stack);
+			each(def.deps, function (depId, idx) {
+
+				err(contains(stack, depId), 33, 'cyclic dependencies: ' + stack + ' & ' + depId);
+
+				if (cold) {
+					deps = deps.concat(resolve(depId, cold, stack));
+					deps.push(depId);
+				} else {
+					deps[idx] = resolve(depId, cold, stack);
+				}
 			});
 
+			if (cold) {
+				return uniq(deps);
+			}
+
 			var obj = def.fn.apply(global, deps);
-			self.instances[id] = obj;
+			instances[id] = obj;
 			return obj;
-		};
+		},
 
-		// require
-		// -------
+
+
+		// Public methods
+		// --------------
+
+		// ### define
+		// Defines a module for `id: String`, optional `deps: Array[String]`,
+		// `arg: Object/function`.
+		define = function (id, deps, arg) {
+
+			// sort arguments
+			if (arg === undefined) {
+				arg = deps;
+				deps = [];
+			}
+			// check arguments
+			err(!isString(id), 11, 'id must be a string "' + id + '"');
+			err(definitions[id], 12, 'id already defined "' + id + '"');
+			err(!isArray(deps), 13, 'dependencies for "' + id + '" must be an array "' + deps + '"');
+			err(!isObject(arg) && !isFunction(arg), 14, 'arg for "' + id + '" must be object or function "' + arg + '"');
+
+			// accept definition
+			definitions[id] = {
+				id: id,
+				deps: deps,
+				fn: isFunction(arg) ? arg : function () { return arg; }
+			};
+		},
+
+		// ### require
 		// Returns an instance for `id`.
-		self.require = function (arg) {
+		require = function (id) {
 
-			if (_.isArray(arg)) {
+			return resolve(id);
+		},
 
-				return _.map(arg, function (id) {
+		// ### state
+		// Returns an object that holds infos about the current definitions and dependencies.
+		state = function () {
 
-					return self._require(id);
-				});
-			}
+			var res = {};
 
-			if (_.isRegExp(arg)) {
+			each(definitions, function (def, id) {
 
-				var res = {};
-				_.each(_.keys(self.definitions), function (id) {
+				res[id] = {
 
-					if (arg.test(id)) {
-						res[id] = self._require(id);
-					}
-				});
-				return res;
-			}
+					// direct dependencies
+					deps: def.deps.slice(0),
 
-			return self._require(arg);
-		};
+					// transitive dependencies
+					reqs: resolve(id, true),
 
-		// Registers public API on the global object.
-		self.register = function (name) {
-
-			var	previous = global[name],
-				api = {
-					define: self.define,
-					predefined: self.predefined,
-					require: self.require,
-					noConflict: function () {
-
-						if (global[name] === api) {
-							global[name] = previous;
-						}
-						return api;
-					}
+					// already initiated/required
+					init: has(instances, id)
 				};
+			});
 
-			global[name] = api;
+			each(definitions, function (def, id) {
+
+				var inv = [];
+				each(definitions, function (def2, id2) {
+
+					if (contains(res[id2].reqs, id)) {
+						inv.push(id2);
+					}
+				});
+
+				// all inverse dependencies
+				res[id].reqd = inv;
+			});
+
+			return res;
+		},
+
+		// ### log
+		// Returns a string that displays module dependencies.
+		log = function (inv) {
+
+			var out = '\n';
+
+			each(state(), function (st, id) {
+
+				var list = inv ? st.reqd : st.reqs;
+				out += (st.init ? '* ' : '  ') + id + ' -> [ ' + list.join(', ') + ' ]\n';
+			});
+
+			return out;
 		};
+
+
+	// Register Public API
+	// -------------------
+	global[name] = {
+		define: define,
+		require: require,
+		state: state,
+		log: log
 	};
 
+	// Uncomment to run internal tests.
+	/*
+	if (global[name.toUpperCase()] === true) {
+		global[name.toUpperCase()] = {
+			isString: isString,
+			isFunction: isFunction,
+			isArray: isArray,
+			isObject: isObject,
+			has: has,
+			each: each,
+			contains: contains,
+			uniq: uniq,
+			err: err,
+			definitions: definitions,
+			instances: instances,
+			resolve: resolve
+		};
+	} // */
 
-	var modulejs = new ModuleJs();
-	modulejs.register(name);
-
-
-	// debugger
-	// --------
-	var debugName = name.toUpperCase();
-	if (_.isFunction(global[debugName])) {
-		global[debugName] = new global[debugName](modulejs);
-	}
-
-}(this, _, '%BUILD_NAME%'));
+}(this, 'modulejs'));
