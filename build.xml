@@ -39,12 +39,10 @@
 -->
  		<wepp file="${build.dir}/modulejs.js" tofile="${build.dir}/modulejs-${project.version}.js" />
 		<wepp-min file="${build.dir}/modulejs.js" tofile="${build.dir}/modulejs-${project.version}.min.js" />
-		<wepp file="${build.dir}/modulejs-debug.js" tofile="${build.dir}/modulejs-debug-${project.version}.js" />
 		<delete file="${build.dir}/modulejs.js" />
-		<delete file="${build.dir}/modulejs-debug.js" />
  
 		<!-- docs -->
-		<docco dir="${build.dir}" files="modulejs-${project.version}.js modulejs-debug-${project.version}.js" />
+		<docco dir="${build.dir}" files="modulejs-${project.version}.js" />
 	</target>
 
 	<target name="release" depends="build">
@@ -54,7 +52,7 @@
 
 	<target name="jshint" depends="init">
 		<exec executable="${tool.jshint}">
-			<arg line="${src.dir}/modulejs.js ${src.dir}/modulejs-debug.js" />
+			<arg line="${src.dir}/modulejs.js" />
 			<arg line="--config jshint.json" />
 			<arg line="--show-non-errors" />
 		</exec>

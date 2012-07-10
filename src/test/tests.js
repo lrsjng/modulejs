@@ -1,4 +1,4 @@
-/*global __dirname, require, describe, it */
+/*global __dirname, require, describe, before, beforeEach, it, console */
 
 
 var fs = require('fs'),
@@ -7,40 +7,47 @@ var fs = require('fs'),
 	assert = require('assert'),
 	_ = require('underscore'),
 
-	sandbox = {},
-	content;
+	// get source
+	modulejs_content = fs.readFileSync(path.join(__dirname, '../modulejs.js'), 'utf-8'),
 
+	// helper to check for right error
+	throws = function (code, fn) {
 
-content = fs.readFileSync(path.join(__dirname, '../modulejs.js'), 'utf-8');
-vm.runInNewContext(content, sandbox, 'modulejs.js');
+		assert.throws(fn, function (e) {
 
+			return _.isObject(e) && _.size(e) === 3 && e.code === code && _.isString(e.msg) && _.isFunction(e.toString);
+		});
+	};
 
-var throws = function (fn, code, msg) {
-
-	assert.throws(fn, function (e) {
-
-		return _.isObject(e) && _.size(e) === 3 && e.code === code && _.isString(e.msg) && _.isFunction(e.toString);
-	}, msg);
-};
-
-
-describe('sandbox', function () {
-
-	it('script publishes only one global: "modulejs"', function () {
-
-		assert.strictEqual(_.size(sandbox), 1);
-		assert.ok(_.isObject(sandbox.modulejs));
-	});
-});
 
 
 describe('modulejs', function () {
 
-	var modjs = sandbox.modulejs;
 
-	it('has right number of members', function () {
+	var sandbox, modjs, def, req, state, log;
 
-		assert.strictEqual(_.size(modjs), 2);
+	beforeEach( function () {
+
+		sandbox = {};
+		vm.runInNewContext(modulejs_content, sandbox, 'modulejs.js');
+
+		modjs = sandbox.modulejs;
+		def = modjs.define;
+		req = modjs.require;
+		state = modjs.state;
+		log = modjs.log;
+	});
+
+
+	it('is the only published global in normal mode', function () {
+
+		assert.strictEqual(_.size(sandbox), 1);
+		assert.ok(_.isObject(sandbox.modulejs));
+	});
+
+	it('has 4 own properties', function () {
+
+		assert.strictEqual(_.size(modjs), 4);
 	});
 
 	it('#define is function', function () {
@@ -53,185 +60,190 @@ describe('modulejs', function () {
 		assert.ok(_.isFunction(modjs.require));
 	});
 
+	it('#state is function', function () {
+
+		assert.ok(_.isFunction(modjs.state));
+	});
+
+	it('#log is function', function () {
+
+		assert.ok(_.isFunction(modjs.log));
+	});
+
 
 	describe('#define', function () {
 
-		var def = sandbox.modulejs.define;
 
 		it('error when no arguments', function () {
 
-			throws(function () { def(); }, 11);
+			throws(11, function () { def(); });
 		});
 
 		it('error when only id', function () {
 
-			throws(function () { def('def-a'); }, 14);
+			throws(14, function () { def('a'); });
 		});
 
 		it('error when non-string id', function () {
 
-			throws(function () { def(true, [], function () {}); }, 11);
+			throws(11, function () { def(true, [], function () {}); });
 		});
 
 		it('error when non-array dependencies', function () {
 
-			throws(function () { def('def-b', true, function () {}); }, 13);
+			throws(13, function () { def('a', true, function () {}); });
 		});
 
 		it('error when non-function and non-object argument', function () {
 
-			throws(function () { def('def-c', [], true); }, 14);
+			throws(14, function () { def('a', [], true); });
 		});
 
 
 		it('accepts id and constructor', function () {
 
-			assert.strictEqual(def('def-d', function () {}), undefined);
+			assert.strictEqual(def('a', function () {}), undefined);
 		});
 
 		it('accepts id, dependencies and constructor', function () {
 
-			assert.strictEqual(def('def-e', [], function () {}), undefined);
+			assert.strictEqual(def('a', [], function () {}), undefined);
 		});
 
 		it('accepts id and object', function () {
 
-			assert.strictEqual(def('def-f', {}), undefined);
+			assert.strictEqual(def('a', {}), undefined);
 		});
 
 		it('accepts id, dependencies and object', function () {
 
-			assert.strictEqual(def('def-g', [], {}), undefined);
+			assert.strictEqual(def('a', [], {}), undefined);
 		});
 
 
 		it('error when id already defined', function () {
 
-			throws(function () { def('def-g', {}); }, 12);
+			assert.strictEqual(def('a', {}), undefined);
+			throws(12, function () { def('a', {}); });
 		});
 
 
 		it('accepts id and array, handles array as object with no dependencies', function () {
 
-			assert.strictEqual(def('def-h', []), undefined);
+			assert.strictEqual(def('a', []), undefined);
 		});
 
 		it('accepts id and two arrays', function () {
 
-			assert.strictEqual(def('def-i', [], []), undefined);
+			assert.strictEqual(def('a', [], []), undefined);
 		});
 	});
 
 
 	describe('#require', function () {
 
-		var def = sandbox.modulejs.define,
-			req = sandbox.modulejs.require,
-			constructorCalls = 0,
-			constructor = function () {
+		it('error when no id', function () {
 
-				constructorCalls += 1;
-				return {
-					test: 123
-				};
-			},
-			testObjA = constructor(),
-			testObjB = constructor();
-
-		def('req-a', function () { return 'ret-a'; });
-		def('req-b', ['req-a'], function () { return 'ret-b'; });
-		def('req-c', ['req-d'], function () { return 'ret-c'; });
-		def('req-d', ['req-c'], function () { return 'ret-d'; });
-		def('req-e', constructor);
-
-
-		it('error when no arguments', function () {
-
-			throws(function () { req(); }, 31);
+			throws(31, function () { req(); });
 		});
 
 		it('error when non-string id', function () {
 
-			throws(function () { req(testObjA); }, 31);
+			throws(31, function () { req({}); });
 		});
 
 		it('error when unknown id', function () {
 
-			throws(function () { req('req-none'); }, 32);
+			throws(32, function () { req('a'); });
 		});
 
 		it('error when cyclic dependencies', function () {
 
-			throws(function () { req('req-d'); }, 33);
+			def('a', ['b'], {});
+			def('b', ['a'], {});
+			throws(33, function () { req('a'); });
 		});
 
 
-		it('returns instance for id', function () {
+		it('returns instance for known id', function () {
 
-			assert.strictEqual(req('req-a'), 'ret-a');
-		});
-
-		it('returns array of instances for array of ids', function () {
-
-			assert.deepEqual(req(['req-a', 'req-b']), ['ret-a', 'ret-b']);
-		});
-
-		it('returns hash of matchted instances (id->instance) for regular expression', function () {
-
-			assert.deepEqual(req(/req-[abx]/), {'req-a': 'ret-a', 'req-b': 'ret-b'});
+			def('a', function () { return 'val-a'; });
+			assert.strictEqual(req('a'), 'val-a');
 		});
 
 
 		it('calls constructors exactly once per id', function () {
 
-			constructorCalls = 0;
-			req('req-e');
-			var cc1 = constructorCalls;
-			req('req-e');
-			var cc2 = constructorCalls;
+			var counter = 0;
 
-			assert.ok(cc1 === 1 && cc2 === 1);
+			def('a', function () {
+
+				counter += 1;
+				return {};
+			});
+
+			assert.strictEqual(counter, 0);
+			req('a');
+			assert.strictEqual(counter, 1);
+			req('a');
+			assert.strictEqual(counter, 1);
 		});
 
 		it('returns always the same instance per id', function () {
 
-			assert.notEqual(testObjA, testObjB);
-			assert.strictEqual(req('req-e'), req('req-e'));
+			def('a', function () { return {}; });
+
+			assert.notEqual({}, {});
+			assert.notEqual(req('a'), {});
+			assert.strictEqual(req('a'), req('a'));
 		});
 	});
 
+
+	describe('#state', function () {
+
+		it('returns object', function () {
+
+			assert.ok(_.isObject(state()));
+		});
+	});
+
+
+	describe('#log', function () {
+
+		it('returns string', function () {
+
+			assert.ok(_.isString(log()));
+		});
+	});
 
 
 	describe('#require', function () {
 
-		var def = sandbox.modulejs.define,
-			req = sandbox.modulejs.require;
-
 		it('resolves long dependency chains', function () {
 
-			def('mod-ldc-a', function () { return 'val-a'; });
-			def('mod-ldc-b', ['mod-ldc-a'], function () { return 'val-b'; });
-			def('mod-ldc-c', ['mod-ldc-b'], function () { return 'val-c'; });
-			def('mod-ldc-d', ['mod-ldc-c'], function () { return 'val-d'; });
-			def('mod-ldc-e', ['mod-ldc-d'], function () { return 'val-e'; });
-			def('mod-ldc-f', ['mod-ldc-e'], function () { return 'val-f'; });
-			def('mod-ldc-g', ['mod-ldc-f'], function () { return 'val-g'; });
+			def('a', function () { return 'val-a'; });
+			def('b', ['a'], function (x) { return x; });
+			def('c', ['b'], function (x) { return x; });
+			def('d', ['c'], function (x) { return x; });
+			def('e', ['d'], function (x) { return x; });
+			def('f', ['e'], function (x) { return x; });
+			def('g', ['f'], function (x) { return x; });
 
-			assert.strictEqual(req('mod-ldc-g'), 'val-g');
+			assert.strictEqual(req('g'), 'val-a');
 		});
 
 		it('error when long cyclic dependencies', function () {
 
-			def('mod-ldci-a', ['mod-ldci-g'], function () { return 'val-a'; });
-			def('mod-ldci-b', ['mod-ldci-a'], function () { return 'val-b'; });
-			def('mod-ldci-c', ['mod-ldci-b'], function () { return 'val-c'; });
-			def('mod-ldci-d', ['mod-ldci-c'], function () { return 'val-d'; });
-			def('mod-ldci-e', ['mod-ldci-d'], function () { return 'val-e'; });
-			def('mod-ldci-f', ['mod-ldci-e'], function () { return 'val-f'; });
-			def('mod-ldci-g', ['mod-ldci-f'], function () { return 'val-g'; });
+			def('a', ['g'], {});
+			def('b', ['a'], {});
+			def('c', ['b'], {});
+			def('d', ['c'], {});
+			def('e', ['d'], {});
+			def('f', ['e'], {});
+			def('g', ['f'], {});
 
-			throws(function () { req('mod-ldci-g'); }, 33, 'require with long chained dependency circle throws exception');
+			throws(33, function () { req('g'); });
 		});
 	});
 });
-
