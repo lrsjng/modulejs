@@ -1,4 +1,4 @@
-/*! modulejs {{version}} - //larsjung.de/modulejs - MIT License */
+/*! modulejs {{pkg.version}} - //larsjung.de/modulejs/ - MIT License */
 
 (function (global, name) {
 	'use strict';
