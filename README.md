@@ -9,6 +9,11 @@ modulejs is provided under the terms of the [MIT License](https://github.com/lrs
 ## Changelog
 
 
+### develop branch
+
+* ...
+
+
 ### v0.3 - *2014-07-07*
 
 * Adds bower

@@ -1,7 +1,7 @@
 {
   "name": "modulejs",
   "displayName": "modulejs",
-  "version": "0.3.0",
+  "version": "0.3.0+",
   "description": "lightweight JavaScript module system",
   "url": "http://larsjung.de/modulejs/",
   "author": "Lars Jung",
