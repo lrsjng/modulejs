@@ -12,6 +12,7 @@ module.exports = function (make) {
 
 		root = path.resolve(__dirname),
 		src = path.join(root, 'src'),
+		dist = path.join(root, 'dist'),
 		build = path.join(root, 'build');
 
 
@@ -50,6 +51,7 @@ module.exports = function (make) {
 
 	make.target('clean', [], 'delete build folder').sync(function () {
 
+		$.DELETE(dist);
 		$.DELETE(build);
 	});
 
@@ -80,12 +82,14 @@ module.exports = function (make) {
 	});
 
 
-	make.target('build', ['check-version'], 'build all updated files').sync(function () {
+	make.target('build', ['check-version', 'clean'], 'build all files').sync(function () {
 
 		$(src + ': *.js')
 			.handlebars(make.env)
+			.WRITE($.map.p(src, dist))
 			.WRITE($.map.p(src, build).s('.js', '-' + pkg.version + '.js'))
 			.uglifyjs()
+			.WRITE($.map.p(src, dist).s('.js', '.min.js'))
 			.WRITE($.map.p(src, build).s('.js', '-' + pkg.version + '.min.js'));
 
 		$(root + ': README*, LICENSE*')
@@ -94,7 +98,7 @@ module.exports = function (make) {
 	});
 
 
-	make.target('release', ['clean', 'build'], 'create a zipball').async(function (done, fail) {
+	make.target('release', ['build'], 'create a zipball').async(function (done, fail) {
 
 		$(build + ': **').shzip({
 			target: path.join(build, pkg.name + '-' + pkg.version + '.zip'),
