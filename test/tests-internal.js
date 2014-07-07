@@ -8,7 +8,7 @@ var fs = require('fs'),
 	_ = require('underscore'),
 
 	// get source
-	modulejs_content = fs.readFileSync(path.join(__dirname, '../modulejs.js'), 'utf-8');
+	modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'), 'utf-8');
 
 
 

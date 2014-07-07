@@ -1,12 +1,17 @@
 # modulejs
 
-* Website with download, docs and demo: <http://larsjung.de/modulejs>
-* Sources: <http://github.com/lrsjng/modulejs>
+* Website with download, docs and demo: <http://larsjung.de/modulejs/>
+* Sources: <https://github.com/lrsjng/modulejs>
 
-modulejs is provided under the terms of the [MIT License](http://github.com/lrsjng/modulejs/blob/master/LICENSE.txt).
+modulejs is provided under the terms of the [MIT License](https://github.com/lrsjng/modulejs/blob/develop/LICENSE.md).
 
 
 ## Changelog
+
+
+### v0.3 - *2014-07-07*
+
+* Adds bower
 
 
 ### v0.2 - *2012-07-11*
