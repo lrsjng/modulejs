@@ -82,7 +82,7 @@ module.exports = function (make) {
 	});
 
 
-	make.target('build', ['check-version', 'clean'], 'build all files').sync(function () {
+	make.target('build', ['check-version', 'clean', 'lint'], 'build all files').sync(function () {
 
 		$(src + ': *.js')
 			.handlebars(make.env)
@@ -92,7 +92,7 @@ module.exports = function (make) {
 			.WRITE($.map.p(src, dist).s('.js', '.min.js'))
 			.WRITE($.map.p(src, build).s('.js', '-' + pkg.version + '.min.js'));
 
-		$(root + ': README*, LICENSE*')
+		$(root + ': README*')
 			.handlebars(make.env)
 			.WRITE($.map.p(root, build));
 	});

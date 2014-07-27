@@ -1,4 +1,5 @@
-/*global __dirname, require, describe, before, beforeEach, it, console */
+/*jshint node: true */
+/*global describe, before, beforeEach, it */
 
 
 var fs = require('fs'),

@@ -1,16 +1,17 @@
 {
   "name": "modulejs",
-  "version": "0.3.0+",
+  "version": "0.4.0",
+  "description": "lightweight JavaScript module system",
   "homepage": "http://larsjung.de/modulejs/",
   "authors": [
-    "Lars Jung <lrsjng@gmail.com>"
+    "Lars Jung <lrsjng@gmail.com> (http://larsjung.de)"
   ],
-  "description": "lightweight JavaScript module system",
   "main": "dist/modulejs.js",
-  "keywords": [
-    "module"
-  ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lrsjng/modulejs.git"
+  },
   "ignore": [
     "**/.*",
     "node_modules",
