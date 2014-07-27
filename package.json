@@ -1,13 +1,23 @@
 {
   "name": "modulejs",
-  "displayName": "modulejs",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "lightweight JavaScript module system",
-  "url": "http://larsjung.de/modulejs/",
-  "author": "Lars Jung",
+  "homepage": "http://larsjung.de/modulejs/",
+  "bugs": "https://github.com/lrsjng/modulejs/issues",
+  "author": "Lars Jung <lrsjng@gmail.com> (http://larsjung.de)",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/lrsjng/modulejs.git"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/mocha --recursive test"
+  },
+  "devDependencies": {
+    "mocha": "~1.21.0",
+    "underscore": "~1.6.0"
+  },
+  "engines": {
+    "node": ">=0.10"
   }
 }
