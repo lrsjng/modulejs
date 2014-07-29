@@ -1,12 +1,14 @@
 # modulejs
 
+[![web](http://img.shields.io/badge/web-larsjung.de/modulejs-a0a060.svg?style=flat)](http://larsjung.de/modulejs/)
+[![GitHub](http://img.shields.io/badge/GitHub-lrsjng/modulejs-a0a060.svg?style=flat)](https://github.com/lrsjng/modulejs)
+[![bower](http://img.shields.io/badge/bower-modulejs-a0a060.svg?style=flat)](https://github.com/lrsjng/modulejs)
+<br>
 [![Dependencies Status](http://img.shields.io/david/lrsjng/modulejs.svg?style=flat)](https://david-dm.org/lrsjng/modulejs)
 [![Build Status](http://img.shields.io/travis/lrsjng/modulejs.svg?style=flat)](https://travis-ci.org/lrsjng/modulejs)
 
 Lightweight JavaScript module system.
 To report a bug or make a feature request please create [a new issue](https://github.com/lrsjng/modulejs/issues/new).
-
-References: [web](http://larsjung.de/modulejs/), [GitHub](https://github.com/lrsjng/modulejs)
 
 
 ## License

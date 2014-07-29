@@ -1,6 +1,6 @@
 {
   "name": "modulejs",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "lightweight JavaScript module system",
   "homepage": "http://larsjung.de/modulejs/",
   "authors": [
@@ -17,7 +17,6 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests",
     "build",
     "local"
   ]
