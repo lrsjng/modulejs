@@ -20,35 +20,6 @@ module.exports = function (make) {
 	make.defaults('release');
 
 
-	make.before(function () {
-
-		var moment = make.moment();
-
-		make.env = {
-			pkg: pkg,
-			stamp: moment.format('YYYY-MM-DD HH:mm:ss')
-		};
-
-		$.info({ method: 'before', message: pkg.version + ' ' + make.env.stamp });
-	});
-
-
-	make.target('check-version', [], 'add git info to dev builds').async(function (done, fail) {
-
-		if (!/\+$/.test(pkg.version)) {
-			done();
-			return;
-		}
-
-		$.git(root, function (err, result) {
-
-			pkg.version += result.buildSuffix;
-			$.info({ method: 'check-version', message: 'version set to ' + pkg.version });
-			done();
-		});
-	});
-
-
 	make.target('clean', [], 'delete build folder').sync(function () {
 
 		$.DELETE(dist);
@@ -77,15 +48,17 @@ module.exports = function (make) {
 			global = {
 			};
 
-		$(src + ': *.js').log(-3)
+		$(src + ': *.js')
 			.jshint(options, global);
 	});
 
 
-	make.target('build', ['check-version', 'clean', 'lint'], 'build all files').sync(function () {
+	make.target('release', ['clean', 'lint'], 'build all files and create a zipball').async(function (done, fail) {
+
+		var env = {pkg: pkg};
 
 		$(src + ': *.js')
-			.handlebars(make.env)
+			.handlebars(env)
 			.WRITE($.map.p(src, dist))
 			.WRITE($.map.p(src, build).s('.js', '-' + pkg.version + '.js'))
 			.uglifyjs()
@@ -93,17 +66,14 @@ module.exports = function (make) {
 			.WRITE($.map.p(src, build).s('.js', '-' + pkg.version + '.min.js'));
 
 		$(root + ': README*')
-			.handlebars(make.env)
+			.handlebars(env)
 			.WRITE($.map.p(root, build));
-	});
 
-
-	make.target('release', ['build'], 'create a zipball').async(function (done, fail) {
-
-		$(build + ': **').shzip({
-			target: path.join(build, pkg.name + '-' + pkg.version + '.zip'),
-			dir: build,
-			callback: done
-		});
+		$(build + ': **')
+			.shzip({
+				target: path.join(build, pkg.name + '-' + pkg.version + '.zip'),
+				dir: build,
+				callback: done
+			});
 	});
 };
