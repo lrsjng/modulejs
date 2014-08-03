@@ -1,6 +1,6 @@
 {
   "name": "modulejs",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "lightweight JavaScript module system",
   "homepage": "http://larsjung.de/modulejs/",
   "bugs": "https://github.com/lrsjng/modulejs/issues",

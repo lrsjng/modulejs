@@ -5,7 +5,7 @@
 [![Dependencies Status][david-img]][david-url] [![Build Status][travis-img]][travis-url]
 
 Lightweight JavaScript module system.
-To report a bug or make a feature request please create [a new issue][github-issue-url].
+For bugs and feature requests please use [GitHub issues][github-issues-url].
 
 
 ## License
@@ -36,7 +36,7 @@ THE SOFTWARE.
 [github-url]: https://github.com/lrsjng/modulejs
 [david-url]: https://david-dm.org/lrsjng/modulejs
 [travis-url]: https://travis-ci.org/lrsjng/modulejs
-[github-issue-url]: https://github.com/lrsjng/modulejs/issues/new
+[github-issues-url]: https://github.com/lrsjng/modulejs/issues
 
 [web-img]: http://img.shields.io/badge/web-larsjung.de/modulejs-a0a060.svg?style=flat
 [github-img]: http://img.shields.io/badge/GitHub-lrsjng/modulejs-a0a060.svg?style=flat
