@@ -1,14 +1,11 @@
 # modulejs
 
-[![web](http://img.shields.io/badge/web-larsjung.de/modulejs-a0a060.svg?style=flat)](http://larsjung.de/modulejs/)
-[![GitHub](http://img.shields.io/badge/GitHub-lrsjng/modulejs-a0a060.svg?style=flat)](https://github.com/lrsjng/modulejs)
-[![bower](http://img.shields.io/badge/bower-modulejs-a0a060.svg?style=flat)](https://github.com/lrsjng/modulejs)
+[![web][web-img]][web-url] [![GitHub][github-img]][github-url] [![bower][bower-img]][github-url]
 <br>
-[![Dependencies Status](http://img.shields.io/david/lrsjng/modulejs.svg?style=flat)](https://david-dm.org/lrsjng/modulejs)
-[![Build Status](http://img.shields.io/travis/lrsjng/modulejs.svg?style=flat)](https://travis-ci.org/lrsjng/modulejs)
+[![Dependencies Status][david-img]][david-url] [![Build Status][travis-img]][travis-url]
 
 Lightweight JavaScript module system.
-To report a bug or make a feature request please create [a new issue](https://github.com/lrsjng/modulejs/issues/new).
+To report a bug or make a feature request please create [a new issue][github-issue-url].
 
 
 ## License
@@ -33,3 +30,17 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+
+[web-url]: http://larsjung.de/modulejs/
+[github-url]: https://github.com/lrsjng/modulejs
+[david-url]: https://david-dm.org/lrsjng/modulejs
+[travis-url]: https://travis-ci.org/lrsjng/modulejs
+[github-issue-url]: https://github.com/lrsjng/modulejs/issues/new
+
+[web-img]: http://img.shields.io/badge/web-larsjung.de/modulejs-a0a060.svg?style=flat
+[github-img]: http://img.shields.io/badge/GitHub-lrsjng/modulejs-a0a060.svg?style=flat
+[bower-img]: http://img.shields.io/badge/bower-modulejs-a0a060.svg?style=flat
+
+[david-img]: http://img.shields.io/david/lrsjng/modulejs.svg?style=flat
+[travis-img]: http://img.shields.io/travis/lrsjng/modulejs.svg?style=flat

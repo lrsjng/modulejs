@@ -46,9 +46,9 @@ describe('modulejs', function () {
 		assert.ok(_.isObject(sandbox.modulejs));
 	});
 
-	it('has 4 own properties', function () {
+	it('has 5 own properties', function () {
 
-		assert.strictEqual(_.size(modjs), 4);
+		assert.strictEqual(_.size(modjs), 5);
 	});
 
 	it('#define is function', function () {
@@ -69,6 +69,11 @@ describe('modulejs', function () {
 	it('#log is function', function () {
 
 		assert.ok(_.isFunction(modjs.log));
+	});
+
+	it('#_private is object', function () {
+
+		assert.ok(_.isObject(modjs._private));
 	});
 
 

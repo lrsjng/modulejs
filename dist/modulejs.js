@@ -1,4 +1,4 @@
-/*! modulejs 0.4.2 - //larsjung.de/modulejs/ - MIT License */
+/*! modulejs 0.4.3 - //larsjung.de/modulejs/ - MIT License */
 
 (function (global, name) {
 	'use strict';
@@ -273,13 +273,8 @@
 		define: define,
 		require: require,
 		state: state,
-		log: log
-	};
-
-	// Uncomment to run internal tests.
-	/*
-	if (global[name.toUpperCase()] === true) {
-		global[name.toUpperCase()] = {
+		log: log,
+		_private: {
 			isString: isString,
 			isFunction: isFunction,
 			isArray: isArray,
@@ -292,7 +287,7 @@
 			definitions: definitions,
 			instances: instances,
 			resolve: resolve
-		};
-	} // */
+		}
+	};
 
 }(this, 'modulejs'));
