@@ -1,11 +1,11 @@
 # modulejs
 
-[![web][web-img]][web-url] [![GitHub][github-img]][github-url] [![bower][bower-img]][github-url]
+[![license][license-img]][github] [![web][web-img]][web] [![github][github-img]][github] [![bower][bower-img]][github]
 <br>
-[![Dependencies Status][david-img]][david-url] [![Build Status][travis-img]][travis-url]
+[![Dependencies Status][david-img]][david] [![Build Status][travis-img]][travis]
 
 Lightweight JavaScript module system.
-For bugs and feature requests please use [GitHub issues][github-issues-url].
+For bugs and feature requests please use [GitHub issues][github-issues].
 
 
 ## License
@@ -32,15 +32,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-[web-url]: http://larsjung.de/modulejs/
-[github-url]: https://github.com/lrsjng/modulejs
-[david-url]: https://david-dm.org/lrsjng/modulejs
-[travis-url]: https://travis-ci.org/lrsjng/modulejs
-[github-issues-url]: https://github.com/lrsjng/modulejs/issues
+[web]: http://larsjung.de/modulejs/
+[github]: https://github.com/lrsjng/modulejs
+[david]: https://david-dm.org/lrsjng/modulejs
+[travis]: https://travis-ci.org/lrsjng/modulejs
+[github-issues]: https://github.com/lrsjng/modulejs/issues
 
-[web-img]: http://img.shields.io/badge/web-larsjung.de/modulejs-a0a060.svg?style=flat
-[github-img]: http://img.shields.io/badge/GitHub-lrsjng/modulejs-a0a060.svg?style=flat
-[bower-img]: http://img.shields.io/badge/bower-modulejs-a0a060.svg?style=flat
+[license-img]: http://img.shields.io/badge/license-MIT-a0a060.svg?style=flat-square
+[web-img]: http://img.shields.io/badge/web-larsjung.de/modulejs-a0a060.svg?style=flat-square
+[github-img]: http://img.shields.io/badge/github-lrsjng/modulejs-a0a060.svg?style=flat-square
+[bower-img]: http://img.shields.io/badge/bower-modulejs-a0a060.svg?style=flat-square
 
-[david-img]: http://img.shields.io/david/lrsjng/modulejs.svg?style=flat
-[travis-img]: http://img.shields.io/travis/lrsjng/modulejs.svg?style=flat
+[david-img]: http://img.shields.io/david/lrsjng/modulejs.svg?style=flat-square
+[travis-img]: http://img.shields.io/travis/lrsjng/modulejs.svg?style=flat-square

@@ -3,253 +3,253 @@
 
 
 var fs = require('fs'),
-	path = require('path'),
-	vm = require('vm'),
-	assert = require('assert'),
-	_ = require('underscore'),
+    path = require('path'),
+    vm = require('vm'),
+    assert = require('assert'),
+    _ = require('underscore'),
 
-	// get source
-	modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'), 'utf-8'),
+    // get source
+    modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'), 'utf-8'),
 
-	// helper to check for right error
-	throws = function (code, fn) {
+    // helper to check for right error
+    throws = function (code, fn) {
 
-		assert.throws(fn, function (e) {
+        assert.throws(fn, function (e) {
 
-			return _.isObject(e) && _.size(e) === 3 && e.code === code && _.isString(e.msg) && _.isFunction(e.toString);
-		});
-	};
+            return _.isObject(e) && _.size(e) === 3 && e.code === code && _.isString(e.msg) && _.isFunction(e.toString);
+        });
+    };
 
 
 
 describe('modulejs', function () {
 
 
-	var sandbox, modjs, def, req, state, log;
+    var sandbox, modjs, def, req, state, log;
 
-	beforeEach( function () {
+    beforeEach( function () {
 
-		sandbox = {};
-		vm.runInNewContext(modulejs_content, sandbox, 'modulejs.js');
+        sandbox = {};
+        vm.runInNewContext(modulejs_content, sandbox, 'modulejs.js');
 
-		modjs = sandbox.modulejs;
-		def = modjs.define;
-		req = modjs.require;
-		state = modjs.state;
-		log = modjs.log;
-	});
+        modjs = sandbox.modulejs;
+        def = modjs.define;
+        req = modjs.require;
+        state = modjs.state;
+        log = modjs.log;
+    });
 
 
-	it('is the only published global in normal mode', function () {
+    it('is the only published global in normal mode', function () {
 
-		assert.strictEqual(_.size(sandbox), 1);
-		assert.ok(_.isObject(sandbox.modulejs));
-	});
+        assert.strictEqual(_.size(sandbox), 1);
+        assert.ok(_.isObject(sandbox.modulejs));
+    });
 
-	it('has 5 own properties', function () {
+    it('has 5 own properties', function () {
 
-		assert.strictEqual(_.size(modjs), 5);
-	});
+        assert.strictEqual(_.size(modjs), 5);
+    });
 
-	it('#define is function', function () {
+    it('#define is function', function () {
 
-		assert.ok(_.isFunction(modjs.define));
-	});
+        assert.ok(_.isFunction(modjs.define));
+    });
 
-	it('#require is function', function () {
+    it('#require is function', function () {
 
-		assert.ok(_.isFunction(modjs.require));
-	});
+        assert.ok(_.isFunction(modjs.require));
+    });
 
-	it('#state is function', function () {
+    it('#state is function', function () {
 
-		assert.ok(_.isFunction(modjs.state));
-	});
+        assert.ok(_.isFunction(modjs.state));
+    });
 
-	it('#log is function', function () {
+    it('#log is function', function () {
 
-		assert.ok(_.isFunction(modjs.log));
-	});
+        assert.ok(_.isFunction(modjs.log));
+    });
 
-	it('#_private is object', function () {
+    it('#_private is object', function () {
 
-		assert.ok(_.isObject(modjs._private));
-	});
+        assert.ok(_.isObject(modjs._private));
+    });
 
 
-	describe('#define', function () {
+    describe('#define', function () {
 
 
-		it('error when no arguments', function () {
+        it('error when no arguments', function () {
 
-			throws(11, function () { def(); });
-		});
+            throws(11, function () { def(); });
+        });
 
-		it('error when only id', function () {
+        it('error when only id', function () {
 
-			throws(14, function () { def('a'); });
-		});
+            throws(14, function () { def('a'); });
+        });
 
-		it('error when non-string id', function () {
+        it('error when non-string id', function () {
 
-			throws(11, function () { def(true, [], function () {}); });
-		});
+            throws(11, function () { def(true, [], function () {}); });
+        });
 
-		it('error when non-array dependencies', function () {
+        it('error when non-array dependencies', function () {
 
-			throws(13, function () { def('a', true, function () {}); });
-		});
+            throws(13, function () { def('a', true, function () {}); });
+        });
 
-		it('error when non-function and non-object argument', function () {
+        it('error when non-function and non-object argument', function () {
 
-			throws(14, function () { def('a', [], true); });
-		});
+            throws(14, function () { def('a', [], true); });
+        });
 
 
-		it('accepts id and constructor', function () {
+        it('accepts id and constructor', function () {
 
-			assert.strictEqual(def('a', function () {}), undefined);
-		});
+            assert.strictEqual(def('a', function () {}), undefined);
+        });
 
-		it('accepts id, dependencies and constructor', function () {
+        it('accepts id, dependencies and constructor', function () {
 
-			assert.strictEqual(def('a', [], function () {}), undefined);
-		});
+            assert.strictEqual(def('a', [], function () {}), undefined);
+        });
 
-		it('accepts id and object', function () {
+        it('accepts id and object', function () {
 
-			assert.strictEqual(def('a', {}), undefined);
-		});
+            assert.strictEqual(def('a', {}), undefined);
+        });
 
-		it('accepts id, dependencies and object', function () {
+        it('accepts id, dependencies and object', function () {
 
-			assert.strictEqual(def('a', [], {}), undefined);
-		});
+            assert.strictEqual(def('a', [], {}), undefined);
+        });
 
 
-		it('error when id already defined', function () {
+        it('error when id already defined', function () {
 
-			assert.strictEqual(def('a', {}), undefined);
-			throws(12, function () { def('a', {}); });
-		});
+            assert.strictEqual(def('a', {}), undefined);
+            throws(12, function () { def('a', {}); });
+        });
 
 
-		it('accepts id and array, handles array as object with no dependencies', function () {
+        it('accepts id and array, handles array as object with no dependencies', function () {
 
-			assert.strictEqual(def('a', []), undefined);
-		});
+            assert.strictEqual(def('a', []), undefined);
+        });
 
-		it('accepts id and two arrays', function () {
+        it('accepts id and two arrays', function () {
 
-			assert.strictEqual(def('a', [], []), undefined);
-		});
-	});
+            assert.strictEqual(def('a', [], []), undefined);
+        });
+    });
 
 
-	describe('#require', function () {
+    describe('#require', function () {
 
-		it('error when no id', function () {
+        it('error when no id', function () {
 
-			throws(31, function () { req(); });
-		});
+            throws(31, function () { req(); });
+        });
 
-		it('error when non-string id', function () {
+        it('error when non-string id', function () {
 
-			throws(31, function () { req({}); });
-		});
+            throws(31, function () { req({}); });
+        });
 
-		it('error when unknown id', function () {
+        it('error when unknown id', function () {
 
-			throws(32, function () { req('a'); });
-		});
+            throws(32, function () { req('a'); });
+        });
 
-		it('error when cyclic dependencies', function () {
+        it('error when cyclic dependencies', function () {
 
-			def('a', ['b'], {});
-			def('b', ['a'], {});
-			throws(33, function () { req('a'); });
-		});
+            def('a', ['b'], {});
+            def('b', ['a'], {});
+            throws(33, function () { req('a'); });
+        });
 
 
-		it('returns instance for known id', function () {
+        it('returns instance for known id', function () {
 
-			def('a', function () { return 'val-a'; });
-			assert.strictEqual(req('a'), 'val-a');
-		});
+            def('a', function () { return 'val-a'; });
+            assert.strictEqual(req('a'), 'val-a');
+        });
 
 
-		it('calls constructors exactly once per id', function () {
+        it('calls constructors exactly once per id', function () {
 
-			var counter = 0;
+            var counter = 0;
 
-			def('a', function () {
+            def('a', function () {
 
-				counter += 1;
-				return {};
-			});
+                counter += 1;
+                return {};
+            });
 
-			assert.strictEqual(counter, 0);
-			req('a');
-			assert.strictEqual(counter, 1);
-			req('a');
-			assert.strictEqual(counter, 1);
-		});
+            assert.strictEqual(counter, 0);
+            req('a');
+            assert.strictEqual(counter, 1);
+            req('a');
+            assert.strictEqual(counter, 1);
+        });
 
-		it('returns always the same instance per id', function () {
+        it('returns always the same instance per id', function () {
 
-			def('a', function () { return {}; });
+            def('a', function () { return {}; });
 
-			assert.notEqual({}, {});
-			assert.notEqual(req('a'), {});
-			assert.strictEqual(req('a'), req('a'));
-		});
-	});
+            assert.notEqual({}, {});
+            assert.notEqual(req('a'), {});
+            assert.strictEqual(req('a'), req('a'));
+        });
+    });
 
 
-	describe('#state', function () {
+    describe('#state', function () {
 
-		it('returns object', function () {
+        it('returns object', function () {
 
-			assert.ok(_.isObject(state()));
-		});
-	});
+            assert.ok(_.isObject(state()));
+        });
+    });
 
 
-	describe('#log', function () {
+    describe('#log', function () {
 
-		it('returns string', function () {
+        it('returns string', function () {
 
-			assert.ok(_.isString(log()));
-		});
-	});
+            assert.ok(_.isString(log()));
+        });
+    });
 
 
-	describe('#require', function () {
+    describe('#require', function () {
 
-		it('resolves long dependency chains', function () {
+        it('resolves long dependency chains', function () {
 
-			def('a', function () { return 'val-a'; });
-			def('b', ['a'], function (x) { return x; });
-			def('c', ['b'], function (x) { return x; });
-			def('d', ['c'], function (x) { return x; });
-			def('e', ['d'], function (x) { return x; });
-			def('f', ['e'], function (x) { return x; });
-			def('g', ['f'], function (x) { return x; });
+            def('a', function () { return 'val-a'; });
+            def('b', ['a'], function (x) { return x; });
+            def('c', ['b'], function (x) { return x; });
+            def('d', ['c'], function (x) { return x; });
+            def('e', ['d'], function (x) { return x; });
+            def('f', ['e'], function (x) { return x; });
+            def('g', ['f'], function (x) { return x; });
 
-			assert.strictEqual(req('g'), 'val-a');
-		});
+            assert.strictEqual(req('g'), 'val-a');
+        });
 
-		it('error when long cyclic dependencies', function () {
+        it('error when long cyclic dependencies', function () {
 
-			def('a', ['g'], {});
-			def('b', ['a'], {});
-			def('c', ['b'], {});
-			def('d', ['c'], {});
-			def('e', ['d'], {});
-			def('f', ['e'], {});
-			def('g', ['f'], {});
+            def('a', ['g'], {});
+            def('b', ['a'], {});
+            def('c', ['b'], {});
+            def('d', ['c'], {});
+            def('e', ['d'], {});
+            def('f', ['e'], {});
+            def('g', ['f'], {});
 
-			throws(33, function () { req('g'); });
-		});
-	});
+            throws(33, function () { req('g'); });
+        });
+    });
 });
