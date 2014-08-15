@@ -1,11 +1,9 @@
 # modulejs
 
-[![license][license-img]][github] [![web][web-img]][web] [![github][github-img]][github] [![bower][bower-img]][github]
-<br>
+[![license][license-img]][github] [![web][web-img]][web] [![github][github-img]][github] [![bower][bower-img]][github]  
 [![Dependencies Status][david-img]][david] [![Build Status][travis-img]][travis]
 
 Lightweight JavaScript module system.
-For bugs and feature requests please use [GitHub issues][github-issues].
 
 
 ## License
@@ -36,7 +34,6 @@ THE SOFTWARE.
 [github]: https://github.com/lrsjng/modulejs
 [david]: https://david-dm.org/lrsjng/modulejs
 [travis]: https://travis-ci.org/lrsjng/modulejs
-[github-issues]: https://github.com/lrsjng/modulejs/issues
 
 [license-img]: http://img.shields.io/badge/license-MIT-a0a060.svg?style=flat-square
 [web-img]: http://img.shields.io/badge/web-larsjung.de/modulejs-a0a060.svg?style=flat-square
