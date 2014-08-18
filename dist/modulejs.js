@@ -1,5 +1,4 @@
-/*! modulejs 0.4.8 - //larsjung.de/modulejs/ - MIT License */
-
+/* modulejs 1.0.0 - http://larsjung.de/modulejs/ */
 (function (global, name) {
     'use strict';
 

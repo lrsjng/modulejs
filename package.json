@@ -1,6 +1,7 @@
 {
   "name": "modulejs",
-  "version": "0.4.8",
+  "displayName": "modulejs",
+  "version": "1.0.0",
   "description": "lightweight JavaScript module system",
   "homepage": "http://larsjung.de/modulejs/",
   "bugs": "https://github.com/lrsjng/modulejs/issues",
@@ -14,8 +15,8 @@
     "test": "mocha --recursive test"
   },
   "devDependencies": {
-    "mocha": "~1.21.0",
-    "underscore": "~1.6.0"
+    "lodash": "~2.4.1",
+    "mocha": "~1.21.0"
   },
   "engines": {
     "node": ">=0.10"

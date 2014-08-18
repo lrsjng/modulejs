@@ -16,7 +16,7 @@ module.exports = function (make) {
         build = path.join(root, 'build');
 
 
-    make.version('>=0.10.0');
+    make.version('=0.11.0');
     make.defaults('release');
 
 
@@ -55,13 +55,16 @@ module.exports = function (make) {
 
     make.target('release', ['clean', 'lint'], 'build all files and create a zipball').async(function (done, fail) {
 
+        var header = '/* ' + pkg.displayName + ' ' + pkg.version + ' - ' + pkg.homepage + ' */\n';
         var env = {pkg: pkg};
 
         $(src + ': *.js')
             .handlebars(env)
+            .wrap(header)
             .WRITE($.map.p(src, dist))
             .WRITE($.map.p(src, build).s('.js', '-' + pkg.version + '.js'))
             .uglifyjs()
+            .wrap(header)
             .WRITE($.map.p(src, dist).s('.js', '.min.js'))
             .WRITE($.map.p(src, build).s('.js', '-' + pkg.version + '.min.js'));
 

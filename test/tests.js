@@ -6,7 +6,7 @@ var fs = require('fs'),
     path = require('path'),
     vm = require('vm'),
     assert = require('assert'),
-    _ = require('underscore'),
+    _ = require('lodash'),
 
     // get source
     modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'), 'utf-8'),
