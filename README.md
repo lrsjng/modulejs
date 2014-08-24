@@ -1,7 +1,7 @@
 # modulejs
 
 [![license][license-img]][github] [![web][web-img]][web] [![github][github-img]][github] [![bower][bower-img]][github]  
-[![Dependencies Status][david-img]][david] [![Build Status][travis-img]][travis]
+[![dependencies status][david-img]][david] [![build status][travis-img]][travis]
 
 Lightweight JavaScript module system.
 

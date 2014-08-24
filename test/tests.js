@@ -2,24 +2,23 @@
 /*global describe, before, beforeEach, it */
 
 
-var fs = require('fs'),
-    path = require('path'),
-    vm = require('vm'),
-    assert = require('assert'),
-    _ = require('lodash'),
+var _ = require('lodash');
+var assert = require('assert');
+var fs = require('fs');
+var path = require('path');
+var vm = require('vm');
 
-    // get source
-    modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'), 'utf-8'),
+// get source
+var modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'), 'utf-8');
 
-    // helper to check for right error
-    throws = function (code, fn) {
+// helper to check for right error
+var throws = function (code, fn) {
 
         assert.throws(fn, function (e) {
 
             return _.isObject(e) && _.size(e) === 3 && e.code === code && _.isString(e.msg) && _.isFunction(e.toString);
         });
     };
-
 
 
 describe('modulejs', function () {

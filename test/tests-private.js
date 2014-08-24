@@ -2,15 +2,14 @@
 /*global describe, before, beforeEach, it */
 
 
-var fs = require('fs'),
-    path = require('path'),
-    vm = require('vm'),
-    assert = require('assert'),
-    _ = require('lodash'),
+var _ = require('lodash');
+var assert = require('assert');
+var fs = require('fs');
+var path = require('path');
+var vm = require('vm');
 
-    // get source
-    modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'), 'utf-8');
-
+// get source
+var modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'), 'utf-8');
 
 
 describe('modulejs._private', function () {
@@ -289,18 +288,18 @@ describe('modulejs._private', function () {
 
         it('error and message are set correct', function () {
 
-            var code = 123,
-                message = 'test';
+            var code = 123;
+            var message = 'test';
 
             assert.throws(function () { _private.err(true, code, message); }, function (e) {
 
                 var toStr = e.toString();
 
                 return _.size(e) === 3 &&
-                        e.code === code &&
-                        e.msg === message &&
-                        _.isString(toStr) &&
-                        / error 123: test$/.test(toStr);
+                            e.code === code &&
+                            e.msg === message &&
+                            _.isString(toStr) &&
+                            / error 123: test$/.test(toStr);
             });
         });
     });

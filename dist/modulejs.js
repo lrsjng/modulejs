@@ -1,4 +1,4 @@
-/* modulejs 1.0.0 - http://larsjung.de/modulejs/ */
+/* modulejs 1.0.1 - http://larsjung.de/modulejs/ */
 (function (global, name) {
     'use strict';
 
