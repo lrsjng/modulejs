@@ -1,6 +1,6 @@
 {
   "name": "modulejs",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "lightweight JavaScript module system",
   "homepage": "http://larsjung.de/modulejs/",
   "authors": [
@@ -13,11 +13,7 @@
     "url": "https://github.com/lrsjng/modulejs.git"
   },
   "ignore": [
-    "**/.*",
-    "bower_components",
-    "build",
-    "local",
-    "node_modules",
-    "test"
+    "*",
+    "!dist/*"
   ]
 }
