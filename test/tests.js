@@ -1,5 +1,6 @@
 /*jshint node: true */
 /*global describe, before, beforeEach, it */
+'use strict';
 
 
 var _ = require('lodash');

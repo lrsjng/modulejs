@@ -1,7 +1,7 @@
 # modulejs
 
-[![license][license-img]][github] [![web][web-img]][web] [![github][github-img]][github] [![bower][bower-img]][github]  
-[![dependencies status][david-img]][david] [![build status][travis-img]][travis]
+[![license][license-img]][github] [![web][web-img]][web] [![github][github-img]][github] [![bower][bower-img]][github]
+[![build status][travis-img]][travis]
 
 Lightweight JavaScript module system.
 
@@ -32,13 +32,10 @@ THE SOFTWARE.
 
 [web]: http://larsjung.de/modulejs/
 [github]: https://github.com/lrsjng/modulejs
-[david]: https://david-dm.org/lrsjng/modulejs
 [travis]: https://travis-ci.org/lrsjng/modulejs
 
 [license-img]: http://img.shields.io/badge/license-MIT-a0a060.svg?style=flat-square
 [web-img]: http://img.shields.io/badge/web-larsjung.de/modulejs-a0a060.svg?style=flat-square
 [github-img]: http://img.shields.io/badge/github-lrsjng/modulejs-a0a060.svg?style=flat-square
 [bower-img]: http://img.shields.io/badge/bower-lrsjng/modulejs-a0a060.svg?style=flat-square
-
-[david-img]: http://img.shields.io/david/lrsjng/modulejs.svg?style=flat-square
 [travis-img]: http://img.shields.io/travis/lrsjng/modulejs.svg?style=flat-square
