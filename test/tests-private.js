@@ -18,7 +18,7 @@ describe('modulejs._private', function () {
 
     var sandbox, _private;
 
-    beforeEach( function () {
+    beforeEach(function () {
 
         sandbox = {};
         vm.runInNewContext(modulejs_content, sandbox, 'modulejs.js');
@@ -294,13 +294,7 @@ describe('modulejs._private', function () {
 
             assert.throws(function () { _private.err(true, code, message); }, function (e) {
 
-                var toStr = e.toString();
-
-                return _.size(e) === 3 &&
-                            e.code === code &&
-                            e.msg === message &&
-                            _.isString(toStr) &&
-                            / error 123: test$/.test(toStr);
+                return _.size(e) === 1 && e.code === code && e.toString() === 'Error: [modulejs-123] test';
             });
         });
     });

@@ -17,7 +17,7 @@ var throws = function (code, fn) {
 
         assert.throws(fn, function (e) {
 
-            return _.isObject(e) && _.size(e) === 3 && e.code === code && _.isString(e.msg) && _.isFunction(e.toString);
+            return _.isObject(e) && _.size(e) === 1 && e.code === code;
         });
     };
 
@@ -27,7 +27,7 @@ describe('modulejs', function () {
 
     var sandbox, modjs, def, req, state, log;
 
-    beforeEach( function () {
+    beforeEach(function () {
 
         sandbox = {};
         vm.runInNewContext(modulejs_content, sandbox, 'modulejs.js');

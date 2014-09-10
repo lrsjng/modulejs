@@ -1,7 +1,9 @@
-(function (global) {
-'use strict';
+(function (factory) {
 
-var name = 'modulejs';
+this.modulejs = factory();
+
+}(function () {
+'use strict';
 
 // # Util
 
@@ -98,19 +100,9 @@ function uniq(array) {
 function err(condition, code, message) {
 
     if (condition) {
-        throw {
-            // machine readable
-            code: code,
-
-            // human readable
-            msg: message,
-
-            // let it be helpful in consoles
-            toString: function () {
-
-                return name + ' error ' + code + ': ' + message;
-            }
-        };
+        var e = new Error('[modulejs-' + code + '] ' + message);
+        e.code = code;
+        throw e;
     }
 }
 
@@ -169,7 +161,7 @@ function resolve(id, onlyDepIds, stack) {
     }
 
     // create, memorize and return object
-    var obj = def.fn.apply(global, deps);
+    var obj = def.fn.apply(undefined, deps);
     instances[id] = obj;
     return obj;
 }
@@ -266,7 +258,7 @@ function log(inv) {
 
 // # Publish
 
-global[name] = {
+return {
     define: define,
     require: require,
     state: state,
@@ -287,4 +279,4 @@ global[name] = {
     }
 };
 
-}(this));
+}));
