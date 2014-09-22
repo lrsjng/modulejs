@@ -39,4 +39,3 @@ THE SOFTWARE.
 [github-img]: http://img.shields.io/badge/github-lrsjng/modulejs-a0a060.svg?style=flat-square
 [bower-img]: http://img.shields.io/badge/bower-lrsjng/modulejs-a0a060.svg?style=flat-square
 [travis-img]: http://img.shields.io/travis/lrsjng/modulejs.svg?style=flat-square
-
