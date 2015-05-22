@@ -1,7 +1,7 @@
 {
   "name": "modulejs",
   "displayName": "modulejs",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "lightweight JavaScript module system",
   "homepage": "http://larsjung.de/modulejs/",
   "bugs": "https://github.com/lrsjng/modulejs/issues",
@@ -15,15 +15,16 @@
     "test": "mocha --recursive test"
   },
   "devDependencies": {
-    "fquery": "~0.16.2",
-    "fquery-jshint": "~0.2.0",
-    "fquery-jszip": "~0.4.0",
-    "fquery-uglifyjs": "~0.2.1",
-    "lodash": "~2.4.1",
-    "mkr": "~0.6.1",
-    "mocha": "~1.21.4"
+    "fquery": "~0.16.4",
+    "fquery-jshint": "~0.3.0",
+    "fquery-jszip": "~0.5.1",
+    "fquery-uglifyjs": "~0.3.0",
+    "lodash": "~3.9.1",
+    "mkr": "~0.8.5",
+    "mocha": "~2.2.5"
   },
   "engines": {
-    "node": ">=0.10"
+    "node": ">=0.10",
+    "iojs": ">=1.0.0"
   }
 }

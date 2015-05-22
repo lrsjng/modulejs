@@ -1,7 +1,5 @@
-/*jshint node: true */
-/*global describe, before, beforeEach, it */
+/*jshint node: true, mocha: true */
 'use strict';
-
 
 var _ = require('lodash');
 var assert = require('assert');
@@ -15,8 +13,8 @@ var modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'
 
 describe('modulejs._private', function () {
 
-
-    var sandbox, _private;
+    var sandbox;
+    var _private;
 
     beforeEach(function () {
 
@@ -25,7 +23,6 @@ describe('modulejs._private', function () {
 
         _private = sandbox.modulejs._private;
     });
-
 
     it('is object', function () {
 
@@ -194,7 +191,7 @@ describe('modulejs._private', function () {
 
         it('returns true if object has own property only', function () {
 
-            var obj = { a: 1 };
+            var obj = {a: 1};
 
             assert.strictEqual(_private.has(obj, 'a'), true);
 

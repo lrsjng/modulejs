@@ -1,7 +1,5 @@
-/*jshint node: true */
-/*global describe, before, beforeEach, it */
+/*jshint node: true, mocha: true */
 'use strict';
-
 
 var _ = require('lodash');
 var assert = require('assert');
@@ -15,17 +13,21 @@ var modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'
 // helper to check for right error
 var throws = function (code, fn) {
 
-        assert.throws(fn, function (e) {
+    assert.throws(fn, function (e) {
 
-            return _.isObject(e) && _.size(e) === 1 && e.code === code;
-        });
-    };
+        return _.isObject(e) && _.size(e) === 1 && e.code === code;
+    });
+};
 
 
 describe('modulejs', function () {
 
-
-    var sandbox, modjs, def, req, state, log;
+    var sandbox;
+    var modjs;
+    var def;
+    var req;
+    var state;
+    var log;
 
     beforeEach(function () {
 
@@ -38,7 +40,6 @@ describe('modulejs', function () {
         state = modjs.state;
         log = modjs.log;
     });
-
 
     it('is the only published global in normal mode', function () {
 
@@ -79,7 +80,6 @@ describe('modulejs', function () {
 
     describe('#define', function () {
 
-
         it('error when no arguments', function () {
 
             throws(11, function () { def(); });
@@ -105,7 +105,6 @@ describe('modulejs', function () {
             throws(14, function () { def('a', [], true); });
         });
 
-
         it('accepts id and constructor', function () {
 
             assert.strictEqual(def('a', function () {}), undefined);
@@ -126,13 +125,11 @@ describe('modulejs', function () {
             assert.strictEqual(def('a', [], {}), undefined);
         });
 
-
         it('error when id already defined', function () {
 
             assert.strictEqual(def('a', {}), undefined);
             throws(12, function () { def('a', {}); });
         });
-
 
         it('accepts id and array, handles array as object with no dependencies', function () {
 
@@ -170,13 +167,11 @@ describe('modulejs', function () {
             throws(33, function () { req('a'); });
         });
 
-
         it('returns instance for known id', function () {
 
             def('a', function () { return 'val-a'; });
             assert.strictEqual(req('a'), 'val-a');
         });
-
 
         it('calls constructors exactly once per id', function () {
 

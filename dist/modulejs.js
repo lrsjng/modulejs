@@ -1,7 +1,7 @@
-/* modulejs 1.5.0 - http://larsjung.de/modulejs/ */
+/* modulejs 1.5.1 - http://larsjung.de/modulejs/ */
 (function (factory) {
 
-this.modulejs = factory();
+    this.modulejs = factory();
 
 }(function () {
 'use strict';
@@ -53,7 +53,7 @@ function each(obj, iterator, context) {
 
     if (arrayForEach && obj.forEach === arrayForEach) {
         obj.forEach(iterator, context);
-    } else if (obj.length === +obj.length) {
+    } else if (obj.length === Number(obj.length)) {
         for (var i = 0, l = obj.length; i < l; i += 1) {
             iterator.call(context, obj[i], i, obj);
         }

@@ -1,9 +1,7 @@
 /*jshint node: true */
 'use strict';
 
-
 module.exports = function (suite) {
-
 
     var path = require('path');
     var root = path.resolve(__dirname);
@@ -16,40 +14,21 @@ module.exports = function (suite) {
     $.plugin('fquery-jszip');
     $.plugin('fquery-uglifyjs');
 
-
     suite.defaults('release');
-
 
     suite.target('clean', [], 'delete build folder').task(function () {
 
         $([dist, build], {dirs: true}).delete();
     });
 
-
     suite.target('lint', [], 'lint all JavaScript files with JSHint').task(function () {
 
-        var options = {
-                // Enforcing Options
-                bitwise: true,
-                curly: true,
-                eqeqeq: true,
-                forin: true,
-                latedef: true,
-                newcap: true,
-                noempty: true,
-                plusplus: true,
-                trailing: true,
-                undef: true,
-
-                // Environments
-                browser: true
-            };
-        var global = {};
+        var fs = require('fs');
+        var jshint = JSON.parse(fs.readFileSync('.jshintrc', 'utf-8'));
 
         $(src + ': *.js')
-            .jshint(options, global);
+            .jshint(jshint, jshint.globals);
     });
-
 
     suite.target('release', ['clean', 'lint'], 'build all files and create a zipball').task(function () {
 
@@ -70,7 +49,7 @@ module.exports = function (suite) {
             .write($.map.p(root, build), true);
 
         $(build + ': **')
-            .jszip({dir: build})
+            .jszip({dir: build, level: 9})
             .write(target, true);
     });
 };
