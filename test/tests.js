@@ -11,11 +11,15 @@ var vm = require('vm');
 var modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'), 'utf-8');
 
 // helper to check for right error
-var throws = function (code, fn) {
+var throws = function (msg, fn) {
 
     assert.throws(fn, function (e) {
 
-        return _.isObject(e) && _.size(e) === 1 && e.code === code;
+        if (_.isObject(e) && _.isString(e.message) && e.message.indexOf(msg) >= 0) {
+            return true;
+        }
+        console.log(e);
+        throw e;
     });
 };
 
@@ -52,57 +56,57 @@ describe('modulejs', function () {
         assert.strictEqual(_.size(modjs), 5);
     });
 
-    it('#define is function', function () {
+    it('.define() is function', function () {
 
         assert.ok(_.isFunction(modjs.define));
     });
 
-    it('#require is function', function () {
+    it('.require() is function', function () {
 
         assert.ok(_.isFunction(modjs.require));
     });
 
-    it('#state is function', function () {
+    it('.state() is function', function () {
 
         assert.ok(_.isFunction(modjs.state));
     });
 
-    it('#log is function', function () {
+    it('.log() is function', function () {
 
         assert.ok(_.isFunction(modjs.log));
     });
 
-    it('#_private is object', function () {
+    it('._private is object', function () {
 
         assert.ok(_.isObject(modjs._private));
     });
 
 
-    describe('#define', function () {
+    describe('.define()', function () {
 
         it('error when no arguments', function () {
 
-            throws(11, function () { def(); });
+            throws('id must be string', function () { def(); });
         });
 
         it('error when only id', function () {
 
-            throws(14, function () { def('a'); });
+            throws('def must be object or function', function () { def('a'); });
         });
 
         it('error when non-string id', function () {
 
-            throws(11, function () { def(true, [], function () {}); });
+            throws('id must be string', function () { def(true, [], function () {}); });
         });
 
         it('error when non-array dependencies', function () {
 
-            throws(13, function () { def('a', true, function () {}); });
+            throws('deps must be array', function () { def('a', true, function () {}); });
         });
 
         it('error when non-function and non-object argument', function () {
 
-            throws(14, function () { def('a', [], true); });
+            throws('def must be object or function', function () { def('a', [], true); });
         });
 
         it('accepts id and constructor', function () {
@@ -128,7 +132,7 @@ describe('modulejs', function () {
         it('error when id already defined', function () {
 
             assert.strictEqual(def('a', {}), undefined);
-            throws(12, function () { def('a', {}); });
+            throws('id already defined', function () { def('a', {}); });
         });
 
         it('accepts id and array, handles array as object with no dependencies', function () {
@@ -143,28 +147,28 @@ describe('modulejs', function () {
     });
 
 
-    describe('#require', function () {
+    describe('.require()', function () {
 
         it('error when no id', function () {
 
-            throws(31, function () { req(); });
+            throws('id must be string', function () { req(); });
         });
 
         it('error when non-string id', function () {
 
-            throws(31, function () { req({}); });
+            throws('id must be string', function () { req({}); });
         });
 
         it('error when unknown id', function () {
 
-            throws(32, function () { req('a'); });
+            throws('id not defined', function () { req('a'); });
         });
 
         it('error when cyclic dependencies', function () {
 
             def('a', ['b'], {});
             def('b', ['a'], {});
-            throws(33, function () { req('a'); });
+            throws('circular dependencies', function () { req('a'); });
         });
 
         it('returns instance for known id', function () {
@@ -201,7 +205,7 @@ describe('modulejs', function () {
     });
 
 
-    describe('#state', function () {
+    describe('.state()', function () {
 
         it('returns object', function () {
 
@@ -210,7 +214,7 @@ describe('modulejs', function () {
     });
 
 
-    describe('#log', function () {
+    describe('.log()', function () {
 
         it('returns string', function () {
 
@@ -219,7 +223,7 @@ describe('modulejs', function () {
     });
 
 
-    describe('#require', function () {
+    describe('.require()', function () {
 
         it('resolves long dependency chains', function () {
 
@@ -244,7 +248,7 @@ describe('modulejs', function () {
             def('f', ['e'], {});
             def('g', ['f'], {});
 
-            throws(33, function () { req('g'); });
+            throws('circular dependencies', function () { req('g'); });
         });
     });
 });

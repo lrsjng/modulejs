@@ -34,68 +34,68 @@ describe('modulejs._private', function () {
         assert.strictEqual(_.size(_private), 12);
     });
 
-    it('#isString is function', function () {
+    it('.isString() is function', function () {
 
         assert.ok(_.isFunction(_private.isString));
     });
 
-    it('#isFunction is function', function () {
+    it('.isFunction() is function', function () {
 
         assert.ok(_.isFunction(_private.isFunction));
     });
 
-    it('#isArray is function', function () {
+    it('.isArray() is function', function () {
 
         assert.ok(_.isFunction(_private.isArray));
     });
 
-    it('#isObject is function', function () {
+    it('.isObject() is function', function () {
 
         assert.ok(_.isFunction(_private.isObject));
     });
 
-    it('#has is function', function () {
+    it('.has() is function', function () {
 
         assert.ok(_.isFunction(_private.has));
     });
 
-    it('#each is function', function () {
+    it('.each() is function', function () {
 
         assert.ok(_.isFunction(_private.each));
     });
 
-    it('#contains is function', function () {
+    it('.contains() is function', function () {
 
         assert.ok(_.isFunction(_private.contains));
     });
 
-    it('#uniq is function', function () {
+    it('.uniq() is function', function () {
 
         assert.ok(_.isFunction(_private.uniq));
     });
 
-    it('#err is function', function () {
+    it('.err() is function', function () {
 
         assert.ok(_.isFunction(_private.err));
     });
 
-    it('#definitions is object', function () {
+    it('.definitions is object', function () {
 
         assert.ok(_.isObject(_private.definitions));
     });
 
-    it('#instances is object', function () {
+    it('.instances is object', function () {
 
         assert.ok(_.isObject(_private.instances));
     });
 
-    it('#resolve is function', function () {
+    it('.resolve() is function', function () {
 
         assert.ok(_.isFunction(_private.resolve));
     });
 
 
-    describe('#isString', function () {
+    describe('.isString()', function () {
 
         it('returns true for string argument only', function () {
 
@@ -118,7 +118,7 @@ describe('modulejs._private', function () {
     });
 
 
-    describe('#isFunction', function () {
+    describe('.isFunction()', function () {
 
         it('returns true for function argument only', function () {
 
@@ -141,7 +141,7 @@ describe('modulejs._private', function () {
     });
 
 
-    describe('#isArray', function () {
+    describe('.isArray()', function () {
 
         it('returns true for array argument only', function () {
 
@@ -164,7 +164,7 @@ describe('modulejs._private', function () {
     });
 
 
-    describe('#isObject', function () {
+    describe('.isObject()', function () {
 
         it('returns true for object argument only', function () {
 
@@ -187,7 +187,7 @@ describe('modulejs._private', function () {
     });
 
 
-    describe('#has', function () {
+    describe('.has()', function () {
 
         it('returns true if object has own property only', function () {
 
@@ -204,12 +204,12 @@ describe('modulejs._private', function () {
     });
 
 
-    describe('#each', function () {
+    describe('.each()', function () {
 
     });
 
 
-    describe('#contains', function () {
+    describe('.contains()', function () {
 
         it('throws error when no arguments', function () {
 
@@ -243,7 +243,7 @@ describe('modulejs._private', function () {
     });
 
 
-    describe('#uniq', function () {
+    describe('.uniq()', function () {
 
         it('throws error when no arguments', function () {
 
@@ -267,7 +267,7 @@ describe('modulejs._private', function () {
     });
 
 
-    describe('#err', function () {
+    describe('.err()', function () {
 
         it('throws no error when no arguments', function () {
 
@@ -284,20 +284,19 @@ describe('modulejs._private', function () {
             assert.throws(function () { _private.err(true); });
         });
 
-        it('error and message are set correct', function () {
+        it('message is set correct', function () {
 
-            var code = 123;
             var message = 'test';
 
-            assert.throws(function () { _private.err(true, code, message); }, function (e) {
+            assert.throws(function () { _private.err(true, message); }, function (e) {
 
-                return _.size(e) === 1 && e.code === code && e.toString() === 'Error: [modulejs-123] test';
+                return e.message === '[modulejs] test';
             });
         });
     });
 
 
-    describe('#definitions', function () {
+    describe('.definitions', function () {
 
         it('starts empty', function () {
 
@@ -306,7 +305,7 @@ describe('modulejs._private', function () {
     });
 
 
-    describe('#instances', function () {
+    describe('.instances', function () {
 
         it('starts empty', function () {
 
@@ -315,7 +314,7 @@ describe('modulejs._private', function () {
     });
 
 
-    describe('#resolve', function () {
+    describe('.resolve()', function () {
 
     });
 });

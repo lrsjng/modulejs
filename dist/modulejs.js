@@ -1,4 +1,4 @@
-/* modulejs 1.5.1 - http://larsjung.de/modulejs/ */
+/* modulejs 1.6.0 - http://larsjung.de/modulejs/ */
 (function (factory) {
 
     this.modulejs = factory();
@@ -98,12 +98,10 @@ function uniq(array) {
 
 // ## err
 // Throws an error if `condition` is `true`.
-function err(condition, code, message) {
+function err(condition, message) {
 
     if (condition) {
-        var e = new Error('[modulejs-' + code + '] ' + message);
-        e.code = code;
-        throw e;
+        throw new Error('[modulejs] ' + message);
     }
 }
 
@@ -125,7 +123,7 @@ var instances = {};
 function resolve(id, onlyDepIds, stack) {
 
     // check arguments
-    err(!isString(id), 31, 'id must be a string "' + id + '"');
+    err(!isString(id), 'id must be string: ' + id);
 
     // if a module is required that was already created return that object
     if (!onlyDepIds && has(instances, id)) {
@@ -134,7 +132,7 @@ function resolve(id, onlyDepIds, stack) {
 
     // check if `id` is defined
     var def = definitions[id];
-    err(!def, 32, 'id not defined "' + id + '"');
+    err(!def, 'id not defined: ' + id);
 
     // copy resolve stack and add this `id`
     stack = (stack || []).slice(0);
@@ -146,7 +144,7 @@ function resolve(id, onlyDepIds, stack) {
     each(def.deps, function (depId) {
 
         // check for circular dependencies
-        err(contains(stack, depId), 33, 'circular dependencies: ' + stack + ' & ' + depId);
+        err(contains(stack, depId), 'circular dependencies: ' + depId + ' in ' + stack);
 
         if (onlyDepIds) {
             deps = deps.concat(resolve(depId, onlyDepIds, stack));
@@ -173,25 +171,25 @@ function resolve(id, onlyDepIds, stack) {
 
 // ## define
 // Defines a module for `id: String`, optional `deps: Array[String]`,
-// `arg: Object/function`.
-function define(id, deps, arg) {
+// `def: Object/function`.
+function define(id, deps, def) {
 
     // sort arguments
-    if (arg === undefined) {
-        arg = deps;
+    if (def === undefined) {
+        def = deps;
         deps = [];
     }
     // check arguments
-    err(!isString(id), 11, 'id must be a string "' + id + '"');
-    err(definitions[id], 12, 'id already defined "' + id + '"');
-    err(!isArray(deps), 13, 'dependencies for "' + id + '" must be an array "' + deps + '"');
-    err(!isObject(arg) && !isFunction(arg), 14, 'arg for "' + id + '" must be object or function "' + arg + '"');
+    err(!isString(id), 'id must be string: ' + id);
+    err(definitions[id], 'id already defined: ' + id);
+    err(!isArray(deps), 'deps must be array: ' + id);
+    err(!isObject(def) && !isFunction(def), 'def must be object or function: ' + id);
 
     // accept definition
     definitions[id] = {
         id: id,
         deps: deps,
-        fn: isFunction(arg) ? arg : function () { return arg; }
+        fn: isFunction(def) ? def : function () { return def; }
     };
 }
 
