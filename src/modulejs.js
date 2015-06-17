@@ -119,14 +119,16 @@ var instances = {};
 // ## resolve
 // Resolves an `id` to an object, or if `onlyDepIds` is `true` only returns dependency-ids.
 // `stack` is used internal to check for circular dependencies.
-function resolve(id, onlyDepIds, stack) {
+function resolve(id, onlyDepIds, stack, resolvedInstances) {
 
     // check arguments
     err(!isString(id), 'id must be string: ' + id);
 
+    resolvedInstances = resolvedInstances || instances;
+
     // if a module is required that was already created return that object
-    if (!onlyDepIds && has(instances, id)) {
-        return instances[id];
+    if (!onlyDepIds && has(resolvedInstances, id)) {
+        return resolvedInstances[id];
     }
 
     // check if `id` is defined
@@ -149,7 +151,7 @@ function resolve(id, onlyDepIds, stack) {
             deps = deps.concat(resolve(depId, onlyDepIds, stack));
             deps.push(depId);
         } else {
-            deps.push(resolve(depId, onlyDepIds, stack));
+            deps.push(resolve(depId, onlyDepIds, stack, resolvedInstances));
         }
     });
 
@@ -160,7 +162,7 @@ function resolve(id, onlyDepIds, stack) {
 
     // create, memorize and return object
     var obj = def.fn.apply(undefined, deps);
-    instances[id] = obj;
+    resolvedInstances[id] = obj;
     return obj;
 }
 
@@ -194,9 +196,9 @@ function define(id, deps, def) {
 
 // ## require
 // Returns an instance for `id`.
-function require(id) {
+function require(id, fakeInstances) {
 
-    return resolve(id);
+    return resolve(id, false, [], fakeInstances);
 }
 
 // ## state

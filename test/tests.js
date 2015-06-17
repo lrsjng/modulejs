@@ -250,5 +250,51 @@ describe('modulejs', function () {
 
             throws('circular dependencies', function () { req('g'); });
         });
+
+        it('resolves fake dependencies, when provided with the optional argument', function () {
+
+            def('a', function () { return 'val-a'; });
+            def('b', ['a'], function (x) { return x; });
+            def('c', ['b'], function (x) { return x; });
+
+            // Resolves fake dependency directly
+            assert.strictEqual(req('a', {a: 'fake-a1'}), 'fake-a1');
+            // Resolves fake dependency recursively
+            assert.strictEqual(req('b', {a: 'fake-a2'}), 'fake-a2');
+            // Does not memorize value of b resolved before
+            assert.strictEqual(req('c', {a: 'fake-a3'}), 'fake-a3');
+            // Resolves to the first fake dependency in the chain
+            assert.strictEqual(req('c', {a: 'fake-a', b: 'fake-b'}), 'fake-b');
+        });
+
+        it('resolves fake dependencies, even when actual dependency had been resolved before', function () {
+
+            def('a', function () { return 'val-a'; });
+            def('b', ['a'], function (x) { return x; });
+            def('c', ['b'], function (x) { return x; });
+
+            // This call memorizes values in instances
+            assert.strictEqual(req('c'), 'val-a');
+
+            assert.strictEqual(req('a', {a: 'fake-a1'}), 'fake-a1');
+            assert.strictEqual(req('b', {a: 'fake-a2'}), 'fake-a2');
+            assert.strictEqual(req('c', {a: 'fake-a3'}), 'fake-a3');
+        });
+
+        it('throws error for cyclic dependencies when fake dependencies don\'t break the cycle', function () {
+
+            def('a', ['b'], {});
+            def('b', ['a'], {});
+
+            throws('circular dependencies', function () { req('b', {z: 'val-z'}); });
+        });
+
+        it('allows to resolve cyclic dependencies when fake dependencies break the cycle', function () {
+
+            def('a', ['b'], {});
+            def('b', ['a'], function (a) { return a });
+
+            assert.strictEqual(req('b', {a: 'fake-a'}), 'fake-a');
+        });
     });
 });
