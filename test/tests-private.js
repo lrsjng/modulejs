@@ -1,11 +1,10 @@
-/*jshint node: true, mocha: true */
 'use strict';
 
-var _ = require('lodash');
 var assert = require('assert');
 var fs = require('fs');
 var path = require('path');
 var vm = require('vm');
+var _ = require('lodash');
 
 // get source
 var modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'), 'utf-8');
@@ -20,13 +19,12 @@ describe('modulejs._private', function () {
 
         sandbox = {};
         vm.runInNewContext(modulejs_content, sandbox, 'modulejs.js');
-
         _private = sandbox.modulejs._private;
     });
 
-    it('is object', function () {
+    it('is plain object', function () {
 
-        assert.ok(_.isObject(_private));
+        assert.ok(_.isPlainObject(_private));
     });
 
     it('has 12 own properties', function () {
@@ -34,68 +32,13 @@ describe('modulejs._private', function () {
         assert.strictEqual(_.size(_private), 12);
     });
 
-    it('.isString() is function', function () {
-
-        assert.ok(_.isFunction(_private.isString));
-    });
-
-    it('.isFunction() is function', function () {
-
-        assert.ok(_.isFunction(_private.isFunction));
-    });
-
-    it('.isArray() is function', function () {
-
-        assert.ok(_.isFunction(_private.isArray));
-    });
-
-    it('.isObject() is function', function () {
-
-        assert.ok(_.isFunction(_private.isObject));
-    });
-
-    it('.has() is function', function () {
-
-        assert.ok(_.isFunction(_private.has));
-    });
-
-    it('.each() is function', function () {
-
-        assert.ok(_.isFunction(_private.each));
-    });
-
-    it('.contains() is function', function () {
-
-        assert.ok(_.isFunction(_private.contains));
-    });
-
-    it('.uniq() is function', function () {
-
-        assert.ok(_.isFunction(_private.uniq));
-    });
-
-    it('.assert() is function', function () {
-
-        assert.ok(_.isFunction(_private.assert));
-    });
-
-    it('.definitions is object', function () {
-
-        assert.ok(_.isObject(_private.definitions));
-    });
-
-    it('.instances is object', function () {
-
-        assert.ok(_.isObject(_private.instances));
-    });
-
-    it('.resolve() is function', function () {
-
-        assert.ok(_.isFunction(_private.resolve));
-    });
-
 
     describe('.isString()', function () {
+
+        it('is function', function () {
+
+            assert.ok(_.isFunction(_private.isString));
+        });
 
         it('returns true for string argument only', function () {
 
@@ -120,6 +63,11 @@ describe('modulejs._private', function () {
 
     describe('.isFunction()', function () {
 
+        it('is function', function () {
+
+            assert.ok(_.isFunction(_private.isFunction));
+        });
+
         it('returns true for function argument only', function () {
 
             assert.strictEqual(_private.isFunction(function () {}), true);
@@ -142,6 +90,11 @@ describe('modulejs._private', function () {
 
 
     describe('.isArray()', function () {
+
+        it('is function', function () {
+
+            assert.ok(_.isFunction(_private.isArray));
+        });
 
         it('returns true for array argument only', function () {
 
@@ -166,6 +119,11 @@ describe('modulejs._private', function () {
 
     describe('.isObject()', function () {
 
+        it('is function', function () {
+
+            assert.ok(_.isFunction(_private.isObject));
+        });
+
         it('returns true for object argument only', function () {
 
             assert.strictEqual(_private.isObject({}), true);
@@ -189,6 +147,11 @@ describe('modulejs._private', function () {
 
     describe('.has()', function () {
 
+        it('is function', function () {
+
+            assert.ok(_.isFunction(_private.has));
+        });
+
         it('returns true if object has own property only', function () {
 
             var obj = {a: 1};
@@ -206,10 +169,19 @@ describe('modulejs._private', function () {
 
     describe('.each()', function () {
 
+        it('is function', function () {
+
+            assert.ok(_.isFunction(_private.each));
+        });
     });
 
 
     describe('.contains()', function () {
+
+        it('is function', function () {
+
+            assert.ok(_.isFunction(_private.contains));
+        });
 
         it('throws error when no arguments', function () {
 
@@ -245,6 +217,11 @@ describe('modulejs._private', function () {
 
     describe('.uniq()', function () {
 
+        it('is function', function () {
+
+            assert.ok(_.isFunction(_private.uniq));
+        });
+
         it('throws error when no arguments', function () {
 
             assert.throws(function () { _private.uniq(); });
@@ -268,6 +245,11 @@ describe('modulejs._private', function () {
 
 
     describe('.assert()', function () {
+
+        it('is function', function () {
+
+            assert.ok(_.isFunction(_private.assert));
+        });
 
         it('throws when no arguments', function () {
 
@@ -298,6 +280,11 @@ describe('modulejs._private', function () {
 
     describe('.definitions', function () {
 
+        it('is plain object', function () {
+
+            assert.ok(_.isPlainObject(_private.definitions));
+        });
+
         it('starts empty', function () {
 
             assert.strictEqual(_.size(_private.definitions), 0);
@@ -306,6 +293,11 @@ describe('modulejs._private', function () {
 
 
     describe('.instances', function () {
+
+        it('is plain object', function () {
+
+            assert.ok(_.isPlainObject(_private.instances));
+        });
 
         it('starts empty', function () {
 
@@ -316,5 +308,9 @@ describe('modulejs._private', function () {
 
     describe('.resolve()', function () {
 
+        it('is function', function () {
+
+            assert.ok(_.isFunction(_private.resolve));
+        });
     });
 });
