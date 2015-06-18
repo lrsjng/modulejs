@@ -74,9 +74,9 @@ describe('modulejs._private', function () {
         assert.ok(_.isFunction(_private.uniq));
     });
 
-    it('.err() is function', function () {
+    it('.assert() is function', function () {
 
-        assert.ok(_.isFunction(_private.err));
+        assert.ok(_.isFunction(_private.assert));
     });
 
     it('.definitions is object', function () {
@@ -267,28 +267,28 @@ describe('modulejs._private', function () {
     });
 
 
-    describe('.err()', function () {
+    describe('.assert()', function () {
 
-        it('throws no error when no arguments', function () {
+        it('throws when no arguments', function () {
 
-            assert.strictEqual(_private.err(), undefined);
+            assert.throws(function () { _private.assert(); });
         });
 
-        it('throws no error when condition is false', function () {
+        it('throws no error when expression is true', function () {
 
-            assert.strictEqual(_private.err(false), undefined);
+            assert.strictEqual(_private.assert(true), undefined);
         });
 
-        it('throws error when condition is true', function () {
+        it('throws error when expression is false', function () {
 
-            assert.throws(function () { _private.err(true); });
+            assert.throws(function () { _private.assert(false); });
         });
 
         it('message is set correct', function () {
 
             var message = 'test';
 
-            assert.throws(function () { _private.err(true, message); }, function (e) {
+            assert.throws(function () { _private.assert(false, message); }, function (e) {
 
                 return e.message === '[modulejs] test';
             });

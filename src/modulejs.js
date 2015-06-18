@@ -95,11 +95,11 @@ function uniq(array) {
     return result;
 }
 
-// ## err
-// Throws an error if `condition` is `true`.
-function err(condition, message) {
+// ## assert
+// Throws an error if `expression` is falsy.
+function assert(expression, message) {
 
-    if (condition) {
+    if (!expression) {
         throw new Error('[modulejs] ' + message);
     }
 }
@@ -122,7 +122,7 @@ var instances = {};
 function resolve(id, onlyDepIds, stack) {
 
     // check arguments
-    err(!isString(id), 'id must be string: ' + id);
+    assert(isString(id), 'id must be string: ' + id);
 
     // if a module is required that was already created return that object
     if (!onlyDepIds && has(instances, id)) {
@@ -131,7 +131,7 @@ function resolve(id, onlyDepIds, stack) {
 
     // check if `id` is defined
     var def = definitions[id];
-    err(!def, 'id not defined: ' + id);
+    assert(def, 'id not defined: ' + id);
 
     // copy resolve stack and add this `id`
     stack = (stack || []).slice(0);
@@ -143,7 +143,7 @@ function resolve(id, onlyDepIds, stack) {
     each(def.deps, function (depId) {
 
         // check for circular dependencies
-        err(contains(stack, depId), 'circular dependencies: ' + depId + ' in ' + stack);
+        assert(!contains(stack, depId), 'circular dependencies: ' + depId + ' in ' + stack);
 
         if (onlyDepIds) {
             deps = deps.concat(resolve(depId, onlyDepIds, stack));
@@ -179,10 +179,10 @@ function define(id, deps, def) {
         deps = [];
     }
     // check arguments
-    err(!isString(id), 'id must be string: ' + id);
-    err(definitions[id], 'id already defined: ' + id);
-    err(!isArray(deps), 'deps must be array: ' + id);
-    err(!isObject(def) && !isFunction(def), 'def must be object or function: ' + id);
+    assert(isString(id), 'id must be string: ' + id);
+    assert(!definitions[id], 'id already defined: ' + id);
+    assert(isArray(deps), 'deps must be array: ' + id);
+    assert(isObject(def) || isFunction(def), 'def must be object or function: ' + id);
 
     // accept definition
     definitions[id] = {
@@ -270,7 +270,7 @@ return {
         each: each,
         contains: contains,
         uniq: uniq,
-        err: err,
+        assert: assert,
         definitions: definitions,
         instances: instances,
         resolve: resolve
