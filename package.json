@@ -2,7 +2,7 @@
   "name": "modulejs",
   "displayName": "modulejs",
   "version": "1.6.0",
-  "description": "lightweight JavaScript module system",
+  "description": "Lightweight JavaScript module system.",
   "homepage": "http://larsjung.de/modulejs/",
   "bugs": "https://github.com/lrsjng/modulejs/issues",
   "author": "Lars Jung <lrsjng@gmail.com> (http://larsjung.de)",

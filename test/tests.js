@@ -46,9 +46,16 @@ describe('modulejs', function () {
         assert.ok(_.isPlainObject(modjs));
     });
 
-    it('has 5 own properties (inc ._private)', function () {
+    it('has the right properties', function () {
 
-        assert.strictEqual(_.size(modjs), 5);
+        assert.deepEqual(_.keys(modjs).sort(), [
+            '_private',
+            'create',
+            'define',
+            'log',
+            'require',
+            'state'
+        ]);
     });
 
 
@@ -235,6 +242,38 @@ describe('modulejs', function () {
         it('returns string', function () {
 
             assert.ok(_.isString(modjs.log()));
+        });
+    });
+
+
+    describe('.create()', function () {
+
+        it('is function', function () {
+
+            assert.ok(_.isFunction(modjs.create));
+        });
+
+        it('returns plain object', function () {
+
+            assert.ok(_.isPlainObject(modjs.create()));
+        });
+
+        it('instances work independently', function () {
+
+            var modjs2 = modjs.create();
+
+            assert.deepEqual(_.keys(modjs.state()), []);
+            assert.deepEqual(_.keys(modjs2.state()), []);
+
+            modjs.define('a', {});
+
+            assert.deepEqual(_.keys(modjs.state()), ['a']);
+            assert.deepEqual(_.keys(modjs2.state()), []);
+
+            modjs2.define('b', {});
+
+            assert.deepEqual(_.keys(modjs.state()), ['a']);
+            assert.deepEqual(_.keys(modjs2.state()), ['b']);
         });
     });
 });

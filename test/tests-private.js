@@ -27,9 +27,22 @@ describe('modulejs._private', function () {
         assert.ok(_.isPlainObject(_private));
     });
 
-    it('has 12 own properties', function () {
+    it('has the right properties', function () {
 
-        assert.strictEqual(_.size(_private), 12);
+        assert.deepEqual(_.keys(_private).sort(), [
+            'assert',
+            'contains',
+            'definitions',
+            'each',
+            'has',
+            'instances',
+            'isArray',
+            'isFunction',
+            'isObject',
+            'isString',
+            'resolve',
+            'uniq'
+        ]);
     });
 
 
