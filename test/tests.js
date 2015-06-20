@@ -9,19 +9,6 @@ var _ = require('lodash');
 // get source
 var modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'), 'utf-8');
 
-// helper to check for right error
-function throws(msg, fn) {
-
-    assert.throws(fn, function (e) {
-
-        if (_.isObject(e) && _.isString(e.message) && e.message.indexOf(msg) >= 0) {
-            return true;
-        }
-        console.log(e);
-        throw e;
-    });
-}
-
 
 describe('modulejs', function () {
 
@@ -68,27 +55,27 @@ describe('modulejs', function () {
 
         it('error when no arguments', function () {
 
-            throws('id must be string', function () { modjs.define(); });
+            assert.throws(function () { modjs.define(); }, /id must be string/);
         });
 
         it('error when only id', function () {
 
-            throws('def must be object or function', function () { modjs.define('a'); });
+            assert.throws(function () { modjs.define('a'); }, /def must be object or function/);
         });
 
         it('error when non-string id', function () {
 
-            throws('id must be string', function () { modjs.define(true, [], function () {}); });
+            assert.throws(function () { modjs.define(true, [], function () {}); }, /id must be string/);
         });
 
         it('error when non-array dependencies', function () {
 
-            throws('deps must be array', function () { modjs.define('a', true, function () {}); });
+            assert.throws(function () { modjs.define('a', true, function () {}); }, /deps must be array/);
         });
 
         it('error when non-function and non-object argument', function () {
 
-            throws('def must be object or function', function () { modjs.define('a', [], true); });
+            assert.throws(function () { modjs.define('a', [], true); }, /def must be object or function/);
         });
 
         it('accepts id and constructor', function () {
@@ -114,7 +101,7 @@ describe('modulejs', function () {
         it('error when id already defined', function () {
 
             assert.strictEqual(modjs.define('a', {}), undefined);
-            throws('id already defined', function () { modjs.define('a', {}); });
+            assert.throws(function () { modjs.define('a', {}); }, /id already defined/);
         });
 
         it('accepts id and array, handles array as object with no dependencies', function () {
@@ -138,24 +125,24 @@ describe('modulejs', function () {
 
         it('error when no id', function () {
 
-            throws('id must be string', function () { modjs.require(); });
+            assert.throws(function () { modjs.require(); }, /id must be string/);
         });
 
         it('error when non-string id', function () {
 
-            throws('id must be string', function () { modjs.require({}); });
+            assert.throws(function () { modjs.require({}); }, /id must be string/);
         });
 
         it('error when unknown id', function () {
 
-            throws('id not defined', function () { modjs.require('a'); });
+            assert.throws(function () { modjs.require('a'); }, /id not defined/);
         });
 
         it('error when cyclic dependencies', function () {
 
             modjs.define('a', ['b'], {});
             modjs.define('b', ['a'], {});
-            throws('circular dependencies', function () { modjs.require('a'); });
+            assert.throws(function () { modjs.require('a'); }, /circular dependencies/);
         });
 
         it('returns instance for known id', function () {
@@ -213,7 +200,7 @@ describe('modulejs', function () {
             modjs.define('f', ['e'], {});
             modjs.define('g', ['f'], {});
 
-            throws('circular dependencies', function () { modjs.require('g'); });
+            assert.throws(function () { modjs.require('g'); }, /circular dependencies/);
         });
     });
 
@@ -274,6 +261,11 @@ describe('modulejs', function () {
 
             assert.deepEqual(_.keys(modjs.state()), ['a']);
             assert.deepEqual(_.keys(modjs2.state()), ['b']);
+
+            modjs.require('a');
+            assert.throws(function () { modjs.require('b'); }, /id not defined/);
+            modjs2.require('b');
+            assert.throws(function () { modjs2.require('a'); }, /id not defined/);
         });
     });
 });
