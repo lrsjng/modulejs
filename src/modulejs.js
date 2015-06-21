@@ -97,11 +97,14 @@
         // Resolves an `id` to an object, or if `onlyDepIds` is `true` only
         // returns dependency-ids. `stack` is used internal to check for
         // circular dependencies.
+        // If defined, `resolvedInstances` is used instead of the already
+        // memorized `instances` to allow faking dependencies.
         function resolve(id, onlyDepIds, stack, resolvedInstances) {
 
             // check arguments
             assert(isString(id), 'id must be string: ' + id);
 
+            // Use `resolvedInstances` if defined
             resolvedInstances = resolvedInstances || instances;
 
             // if a module is required that was already created return that
@@ -169,7 +172,8 @@
             };
         }
 
-        // Returns an instance for `id`.
+        // Returns an instance for `id`. If a `fakeInstances` object is given,
+        // it is used to resolve the dependencies.
         function require(id, fakeInstances) {
 
             return resolve(id, false, [], fakeInstances);
