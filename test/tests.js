@@ -202,6 +202,52 @@ describe('modulejs', function () {
 
             assert.throws(function () { modjs.require('g'); }, /circular dependencies/);
         });
+
+        it('resolves fake dependencies, when provided with the optional argument', function () {
+
+            modjs.define('a', function () { return 'val-a'; });
+            modjs.define('b', ['a'], function (x) { return x; });
+            modjs.define('c', ['b'], function (x) { return x; });
+
+            // Resolves fake dependency directly
+            assert.strictEqual(modjs.require('a', {a: 'fake-a1'}), 'fake-a1');
+            // Resolves fake dependency recursively
+            assert.strictEqual(modjs.require('b', {a: 'fake-a2'}), 'fake-a2');
+            // Does not memorize value of b resolved before
+            assert.strictEqual(modjs.require('c', {a: 'fake-a3'}), 'fake-a3');
+            // Resolves to the first fake dependency in the chain
+            assert.strictEqual(modjs.require('c', {a: 'fake-a', b: 'fake-b'}), 'fake-b');
+        });
+
+        it('resolves fake dependencies, even when actual dependency had been resolved before', function () {
+
+            modjs.define('a', function () { return 'val-a'; });
+            modjs.define('b', ['a'], function (x) { return x; });
+            modjs.define('c', ['b'], function (x) { return x; });
+
+            // This call memorizes values in instances
+            assert.strictEqual(modjs.require('c'), 'val-a');
+
+            assert.strictEqual(modjs.require('a', {a: 'fake-a1'}), 'fake-a1');
+            assert.strictEqual(modjs.require('b', {a: 'fake-a2'}), 'fake-a2');
+            assert.strictEqual(modjs.require('c', {a: 'fake-a3'}), 'fake-a3');
+        });
+
+        it('throws error for cyclic dependencies when fake dependencies don\'t break the cycle', function () {
+
+            modjs.define('a', ['b'], {});
+            modjs.define('b', ['a'], {});
+
+            assert.throws(function () { modjs.require('b', {z: 'val-z'}); }, /circular dependencies/);
+        });
+
+        it('allows to resolve cyclic dependencies when fake dependencies break the cycle', function () {
+
+            modjs.define('a', ['b'], {});
+            modjs.define('b', ['a'], function (a) { return a });
+
+            assert.strictEqual(modjs.require('b', {a: 'fake-a'}), 'fake-a');
+        });
     });
 
 

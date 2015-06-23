@@ -97,15 +97,20 @@
         // Resolves an `id` to an object, or if `onlyDepIds` is `true` only
         // returns dependency-ids. `stack` is used internal to check for
         // circular dependencies.
-        function resolve(id, onlyDepIds, stack) {
+        // If defined, `resolvedInstances` is used instead of the already
+        // memorized `instances` to allow faking dependencies.
+        function resolve(id, onlyDepIds, stack, resolvedInstances) {
 
             // check arguments
             assert(isString(id), 'id must be string: ' + id);
 
+            // Use `resolvedInstances` if defined
+            resolvedInstances = resolvedInstances || instances;
+
             // if a module is required that was already created return that
             // object
-            if (!onlyDepIds && has(instances, id)) {
-                return instances[id];
+            if (!onlyDepIds && has(resolvedInstances, id)) {
+                return resolvedInstances[id];
             }
 
             // check if `id` is defined
@@ -129,7 +134,7 @@
                     deps = deps.concat(resolve(depId, onlyDepIds, stack));
                     deps.push(depId);
                 } else {
-                    deps.push(resolve(depId, onlyDepIds, stack));
+                    deps.push(resolve(depId, onlyDepIds, stack, resolvedInstances));
                 }
             });
 
@@ -140,7 +145,7 @@
 
             // create, memorize and return object
             var obj = def.fn.apply(undefined, deps);
-            instances[id] = obj;
+            resolvedInstances[id] = obj;
             return obj;
         }
 
@@ -167,10 +172,11 @@
             };
         }
 
-        // Returns an instance for `id`.
-        function require(id) {
+        // Returns an instance for `id`. If a `fakeInstances` object is given,
+        // it is used to resolve the dependencies.
+        function require(id, fakeInstances) {
 
-            return resolve(id);
+            return resolve(id, false, [], fakeInstances);
         }
 
         // Returns an object that holds infos about the current definitions
