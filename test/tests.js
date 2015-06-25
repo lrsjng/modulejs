@@ -244,7 +244,7 @@ describe('modulejs', function () {
         it('allows to resolve cyclic dependencies when fake dependencies break the cycle', function () {
 
             modjs.define('a', ['b'], {});
-            modjs.define('b', ['a'], function (a) { return a });
+            modjs.define('b', ['a'], function (a) { return a; });
 
             assert.strictEqual(modjs.require('b', {a: 'fake-a'}), 'fake-a');
         });

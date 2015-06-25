@@ -232,24 +232,24 @@
         }
 
         return {
+            create: create,
             define: define,
+            log: log,
             require: require,
             state: state,
-            log: log,
-            create: create,
             _private: {
-                isString: isString,
-                isFunction: isFunction,
-                isArray: isArray,
-                isObject: isObject,
-                has: has,
-                each: each,
-                contains: contains,
-                uniq: uniq,
                 assert: assert,
+                contains: contains,
                 definitions: definitions,
+                each: each,
+                has: has,
                 instances: instances,
-                resolve: resolve
+                isArray: isArray,
+                isFunction: isFunction,
+                isObject: isObject,
+                isString: isString,
+                resolve: resolve,
+                uniq: uniq
             }
         };
     }
