@@ -1,75 +1,64 @@
 /* modulejs 1.8.0 - http://larsjung.de/modulejs/ */
 (function (root, factory) {
-    'use strict';
 
-    root.modulejs = factory();
+root.modulejs = factory(); // jshint ignore: line
 
 }(this, function () {
     'use strict';
 
-    var objectPrototype = Object.prototype;
-    var arrayForEach = Array.prototype.forEach;
+    var _obj_proto = Object.prototype;
+    var _arr_proto = Array.prototype;
+    var _arr_forEach = _arr_proto.forEach;
+    var _arr_indexOf = _arr_proto.indexOf;
 
-    // Returns a function that returns `true` if `arg` is of the correct
+    // Returns a function that returns `true` if `x` is of the correct
     // `type`, otherwise `false`.
-    function createIsTypeFn(type) {
-
-        return function (arg) {
-
-            return objectPrototype.toString.call(arg) === '[object ' + type + ']';
+    function _create_is_x_fn(type) {
+        return function (x) {
+            return _obj_proto.toString.call(x) === '[object ' + type + ']';
         };
     }
 
     // Type checking functions.
-    var isString = createIsTypeFn('String');
-    var isFunction = createIsTypeFn('Function');
-    var isArray = Array.isArray || createIsTypeFn('Array');
-    function isObject(arg) { return arg === new Object(arg); }
+    var isArray = Array.isArray;
+    var isFunction = _create_is_x_fn('Function');
+    var isObject = _create_is_x_fn('Object');
+    var isString = _create_is_x_fn('String');
+
+    function is(x) {
+        return x !== undefined && x !== null;
+    }
 
     // Short cut for `hasOwnProperty`.
-    function has(arg, id) {
-
-        return objectPrototype.hasOwnProperty.call(arg, id);
+    function has(x, id) {
+        return is(x) && _obj_proto.hasOwnProperty.call(x, id);
     }
 
     // Iterates over all elements af an array or all own keys of an object.
-    function each(obj, iterator, context) {
-
-        if (arrayForEach && obj.forEach === arrayForEach) {
-            obj.forEach(iterator, context);
-        } else if (obj.length === Number(obj.length)) {
-            for (var i = 0, l = obj.length; i < l; i += 1) {
-                iterator.call(context, obj[i], i, obj);
-            }
-        } else {
-            for (var key in obj) {
-                if (has(obj, key)) {
-                    iterator.call(context, obj[key], key, obj);
-                }
+    function each(x, fn, ctx) {
+        if (is(x) && isFunction(fn)) {
+            if (is(x.length)) {
+                _arr_forEach.call(x, fn, ctx);
+            } else {
+                Object.keys(x).forEach(function (key) {
+                    fn.call(ctx, x[key], key, x);
+                });
             }
         }
     }
 
     // Returns `true` if array contains `element`, otherwise `false`.
-    function contains(array, element) {
-
-        for (var i = 0, l = array.length; i < l; i += 1) {
-            if (array[i] === element) {
-                return true;
-            }
-        }
-        return false;
+    function contains(x, val) {
+        return is(x) && _arr_indexOf.call(x, val) >= 0;
     }
 
     // Returns an new array containing no duplicates. Preserves first
     // occurence and order.
     function uniq(array) {
-
         var elements = {};
         var result = [];
 
         each(array, function (el) {
-
             if (!has(elements, el)) {
                 result.push(el);
                 elements[el] = 1;
@@ -81,14 +70,12 @@
 
     // Throws an error if `expression` is falsy.
     function assert(expression, message) {
-
         if (!expression) {
             throw new Error('[modulejs] ' + message);
         }
     }
 
     function create() {
-
         // Module definitions.
         var definitions = {};
 
@@ -155,15 +142,14 @@
         function define(id, deps, def) {
 
             // sort arguments
-            if (def === undefined) {
+            if (arguments.length === 2) {
                 def = deps;
                 deps = [];
             }
             // check arguments
             assert(isString(id), 'id must be string: ' + id);
-            assert(!definitions[id], 'id already defined: ' + id);
+            assert(!has(definitions, id), 'id already defined: ' + id);
             assert(isArray(deps), 'deps must be array: ' + id);
-            assert(isObject(def) || isFunction(def), 'def must be object or function: ' + id);
 
             // accept definition
             definitions[id] = {

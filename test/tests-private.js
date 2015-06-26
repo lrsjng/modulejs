@@ -1,5 +1,6 @@
 'use strict';
 
+var insp = require('util').inspect;
 var assert = require('assert');
 var fs = require('fs');
 var path = require('path');
@@ -53,23 +54,30 @@ describe('modulejs._private', function () {
             assert.ok(_.isFunction(_private.isString));
         });
 
-        it('returns true for string argument only', function () {
+        _.each([
+            ['', true],
+            ['test', true],
 
-            assert.strictEqual(_private.isString(''), true);
-            assert.strictEqual(_private.isString('test'), true);
+            [[], false],
+            [{}, false],
+            [function () {}, false],
+            [new RegExp(), false],
+            [undefined, false],
+            [true, false],
+            [false, false],
+            [null, false],
+            [0, false],
+            [1, false],
+            [0.0, false],
+            [1.0, false]
+        ], function (x) {
 
-            assert.strictEqual(_private.isString(), false);
-            assert.strictEqual(_private.isString(true), false);
-            assert.strictEqual(_private.isString(false), false);
-            assert.strictEqual(_private.isString(null), false);
-            assert.strictEqual(_private.isString(0), false);
-            assert.strictEqual(_private.isString(1), false);
-            assert.strictEqual(_private.isString(0.0), false);
-            assert.strictEqual(_private.isString(1.0), false);
-            assert.strictEqual(_private.isString({}), false);
-            assert.strictEqual(_private.isString([]), false);
-            assert.strictEqual(_private.isString(function () {}), false);
-            assert.strictEqual(_private.isString(new RegExp()), false);
+            var arg = x[0];
+            var exp = x[1];
+
+            it('.isString(' + insp(arg) + ')  ->  ' + insp(exp), function () {
+                assert.strictEqual(_private.isString(arg), exp);
+            });
         });
     });
 
@@ -81,23 +89,30 @@ describe('modulejs._private', function () {
             assert.ok(_.isFunction(_private.isFunction));
         });
 
-        it('returns true for function argument only', function () {
+        _.each([
+            [function () {}, true],
 
-            assert.strictEqual(_private.isFunction(function () {}), true);
+            [[], false],
+            [{}, false],
+            [new RegExp(), false],
+            [undefined, false],
+            [true, false],
+            [false, false],
+            [null, false],
+            [0, false],
+            [1, false],
+            [0.0, false],
+            [1.0, false],
+            ['', false],
+            ['test', false]
+        ], function (x) {
 
-            assert.strictEqual(_private.isFunction(), false);
-            assert.strictEqual(_private.isFunction(true), false);
-            assert.strictEqual(_private.isFunction(false), false);
-            assert.strictEqual(_private.isFunction(null), false);
-            assert.strictEqual(_private.isFunction(0), false);
-            assert.strictEqual(_private.isFunction(1), false);
-            assert.strictEqual(_private.isFunction(0.0), false);
-            assert.strictEqual(_private.isFunction(1.0), false);
-            assert.strictEqual(_private.isFunction(''), false);
-            assert.strictEqual(_private.isFunction('test'), false);
-            assert.strictEqual(_private.isFunction({}), false);
-            assert.strictEqual(_private.isFunction([]), false);
-            assert.strictEqual(_private.isFunction(new RegExp()), false);
+            var arg = x[0];
+            var exp = x[1];
+
+            it('.isFunction(' + insp(arg) + ')  ->  ' + insp(exp), function () {
+                assert.strictEqual(_private.isFunction(arg), exp);
+            });
         });
     });
 
@@ -109,23 +124,30 @@ describe('modulejs._private', function () {
             assert.ok(_.isFunction(_private.isArray));
         });
 
-        it('returns true for array argument only', function () {
+        _.each([
+            [[], true],
 
-            assert.strictEqual(_private.isArray([]), true);
+            [{}, false],
+            [function () {}, false],
+            [new RegExp(), false],
+            [undefined, false],
+            [true, false],
+            [false, false],
+            [null, false],
+            [0, false],
+            [1, false],
+            [0.0, false],
+            [1.0, false],
+            ['', false],
+            ['test', false]
+        ], function (x) {
 
-            assert.strictEqual(_private.isArray(), false);
-            assert.strictEqual(_private.isArray(true), false);
-            assert.strictEqual(_private.isArray(false), false);
-            assert.strictEqual(_private.isArray(null), false);
-            assert.strictEqual(_private.isArray(0), false);
-            assert.strictEqual(_private.isArray(1), false);
-            assert.strictEqual(_private.isArray(0.0), false);
-            assert.strictEqual(_private.isArray(1.0), false);
-            assert.strictEqual(_private.isArray(''), false);
-            assert.strictEqual(_private.isArray('test'), false);
-            assert.strictEqual(_private.isArray({}), false);
-            assert.strictEqual(_private.isArray(function () {}), false);
-            assert.strictEqual(_private.isArray(new RegExp()), false);
+            var arg = x[0];
+            var exp = x[1];
+
+            it('.isArray(' + insp(arg) + ')  ->  ' + insp(exp), function () {
+                assert.strictEqual(_private.isArray(arg), exp);
+            });
         });
     });
 
@@ -137,23 +159,30 @@ describe('modulejs._private', function () {
             assert.ok(_.isFunction(_private.isObject));
         });
 
-        it('returns true for object argument only', function () {
+        _.each([
+            [{}, true],
 
-            assert.strictEqual(_private.isObject({}), true);
-            assert.strictEqual(_private.isObject([]), true);
-            assert.strictEqual(_private.isObject(function () {}), true);
-            assert.strictEqual(_private.isObject(new RegExp()), true);
+            [[], false],
+            [function () {}, false],
+            [new RegExp(), false],
+            [undefined, false],
+            [true, false],
+            [false, false],
+            [null, false],
+            [0, false],
+            [1, false],
+            [0.0, false],
+            [1.0, false],
+            ['', false],
+            ['test', false]
+        ], function (x) {
 
-            assert.strictEqual(_private.isObject(), false);
-            assert.strictEqual(_private.isObject(true), false);
-            assert.strictEqual(_private.isObject(false), false);
-            assert.strictEqual(_private.isObject(null), false);
-            assert.strictEqual(_private.isObject(0), false);
-            assert.strictEqual(_private.isObject(1), false);
-            assert.strictEqual(_private.isObject(0.0), false);
-            assert.strictEqual(_private.isObject(1.0), false);
-            assert.strictEqual(_private.isObject(''), false);
-            assert.strictEqual(_private.isObject('test'), false);
+            var arg = x[0];
+            var exp = x[1];
+
+            it('.isObject(' + insp(arg) + ')  ->  ' + insp(exp), function () {
+                assert.strictEqual(_private.isObject(arg), exp);
+            });
         });
     });
 
@@ -161,21 +190,29 @@ describe('modulejs._private', function () {
     describe('.has()', function () {
 
         it('is function', function () {
-
             assert.ok(_.isFunction(_private.has));
         });
 
-        it('returns true if object has own property only', function () {
+        _.each([
+            [{a: 1}, 'a', true],
 
-            var obj = {a: 1};
+            [{a: 1}, undefined, false],
+            [{a: 1}, 'b', false],
+            [{a: 1}, 'toString', false],
+            [undefined, undefined, false],
+            [null, 1, false],
+            [undefined, 1, false],
+            [{}, undefined, false],
+            [{}, null, false],
+            [{}, 1, false]
+        ], function (x) {
+            var arg1 = x[0];
+            var arg2 = x[1];
+            var exp = x[2];
 
-            assert.strictEqual(_private.has(obj, 'a'), true);
-
-            assert.strictEqual(_private.has(obj), false);
-            assert.strictEqual(_private.has(obj, 'b'), false);
-            assert.strictEqual(_private.has(obj, 'toString'), false);
-
-            assert.throws(function () { _private.has(); });
+            it('.has(' + insp(arg1) + ', ' + insp(arg2) + ')  ->  ' + insp(exp), function () {
+                assert.strictEqual(_private.has(arg1, arg2), exp);
+            });
         });
     });
 
@@ -183,7 +220,6 @@ describe('modulejs._private', function () {
     describe('.each()', function () {
 
         it('is function', function () {
-
             assert.ok(_.isFunction(_private.each));
         });
     });
@@ -192,38 +228,30 @@ describe('modulejs._private', function () {
     describe('.contains()', function () {
 
         it('is function', function () {
-
             assert.ok(_.isFunction(_private.contains));
         });
 
-        it('throws error when no arguments', function () {
+        _.each([
+            [[undefined], undefined, true],
+            [[1], 1, true],
+            [[1, 2], 1, true],
+            [[1, 2, 3], 1, true],
 
-            assert.throws(function () { _private.contains(); });
-        });
+            [undefined, undefined, false],
+            [null, 1, false],
+            [undefined, 1, false],
+            [[], undefined, false],
+            [[], null, false],
+            [[], 1, false],
+            [[1, 2, 3], 4, false]
+        ], function (x) {
+            var arg1 = x[0];
+            var arg2 = x[1];
+            var exp = x[2];
 
-        it('returns false, if no element argument', function () {
-
-            assert.strictEqual(_private.contains([]), false);
-        });
-
-        it('returns false, if element argument is "undefined', function () {
-
-            assert.strictEqual(_private.contains([], undefined), false);
-        });
-
-        it('returns true, if no element argument but "undefined" in array', function () {
-
-            assert.strictEqual(_private.contains([undefined]), true);
-        });
-
-        it('returns true, if element in array', function () {
-
-            assert.strictEqual(_private.contains([1, 2, 3], 3), true);
-        });
-
-        it('returns false, if element not in array', function () {
-
-            assert.strictEqual(_private.contains([1, 2, 3], 4), false);
+            it('.contains(' + insp(arg1) + ', ' + insp(arg2) + ')  ->  ' + insp(exp), function () {
+                assert.deepEqual(_private.contains(arg1, arg2), exp);
+            });
         });
     });
 
@@ -231,28 +259,28 @@ describe('modulejs._private', function () {
     describe('.uniq()', function () {
 
         it('is function', function () {
-
             assert.ok(_.isFunction(_private.uniq));
         });
 
-        it('throws error when no arguments', function () {
+        _.each([
+            [null, []],
+            [undefined, []],
+            [[], []],
+            [[1], [1]],
+            [[1, 2], [1, 2]],
+            [[1, 2, 1], [1, 2]],
+            [[1, 1, 2], [1, 2]],
+            [[1, 2, 2], [1, 2]],
+            [[1, 2, 3, 4], [1, 2, 3, 4]],
+            [[1, 2, 3, 2, 1, 4, 3], [1, 2, 3, 4]],
+            ['ababc', ['a', 'b', 'c']]
+        ], function (x) {
+            var arg = x[0];
+            var exp = x[1];
 
-            assert.throws(function () { _private.uniq(); });
-        });
-
-        it('returns empty array when empty array', function () {
-
-            assert.deepEqual(_private.uniq([]), []);
-        });
-
-        it('exact copy when already unique array', function () {
-
-            assert.deepEqual(_private.uniq([6, 2, 3]), [6, 2, 3]);
-        });
-
-        it('preserves only first occurence of duplicate elements', function () {
-
-            assert.deepEqual(_private.uniq([1, 2, 3, 2, 1, 4, 3]), [1, 2, 3, 4]);
+            it('.uniq(' + insp(arg) + ')  ->  ' + insp(exp), function () {
+                assert.deepEqual(_private.uniq(arg), exp);
+            });
         });
     });
 

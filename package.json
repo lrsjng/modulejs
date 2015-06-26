@@ -12,7 +12,7 @@
     "url": "https://github.com/lrsjng/modulejs.git"
   },
   "scripts": {
-    "test": "mocha --recursive test"
+    "test": "mocha test"
   },
   "devDependencies": {
     "fquery": "^0.16.4",

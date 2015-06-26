@@ -58,11 +58,6 @@ describe('modulejs', function () {
             assert.throws(function () { modjs.define(); }, /id must be string/);
         });
 
-        it('error when only id', function () {
-
-            assert.throws(function () { modjs.define('a'); }, /def must be object or function/);
-        });
-
         it('error when non-string id', function () {
 
             assert.throws(function () { modjs.define(true, [], function () {}); }, /id must be string/);
@@ -73,14 +68,19 @@ describe('modulejs', function () {
             assert.throws(function () { modjs.define('a', true, function () {}); }, /deps must be array/);
         });
 
-        it('error when non-function and non-object argument', function () {
+        it('accepts id and undefined', function () {
 
-            assert.throws(function () { modjs.define('a', [], true); }, /def must be object or function/);
+            assert.strictEqual(modjs.define('a', undefined), undefined);
         });
 
         it('accepts id and constructor', function () {
 
             assert.strictEqual(modjs.define('a', function () {}), undefined);
+        });
+
+        it('accepts id, dependencies and undefined', function () {
+
+            assert.strictEqual(modjs.define('a', []), undefined);
         });
 
         it('accepts id, dependencies and constructor', function () {
