@@ -6,35 +6,30 @@ var path = require('path');
 var vm = require('vm');
 var _ = require('lodash');
 
-// get source
+// load source
 var modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'), 'utf-8');
+var sandbox = {};
+var modjs;
+vm.runInNewContext(modulejs_content, sandbox, 'modulejs.js');
 
 
 describe('modulejs', function () {
 
-    var sandbox;
-    var modjs;
 
     beforeEach(function () {
-
-        sandbox = {};
-        vm.runInNewContext(modulejs_content, sandbox, 'modulejs.js');
-        modjs = sandbox.modulejs;
+        modjs = sandbox.modulejs.create();
     });
 
     it('is the only published global', function () {
-
         assert.strictEqual(_.size(sandbox), 1);
         assert.ok(_.has(sandbox, 'modulejs'));
     });
 
     it('is plain object', function () {
-
         assert.ok(_.isPlainObject(modjs));
     });
 
     it('has the right properties', function () {
-
         assert.deepEqual(_.keys(modjs).sort(), [
             '_private',
             'create',
