@@ -1,24 +1,17 @@
 'use strict';
 
-var insp = require('util').inspect;
 var assert = require('assert');
-var fs = require('fs');
-var path = require('path');
-var vm = require('vm');
 var _ = require('lodash');
+var insp = require('util').inspect;
+var getRoot = require('./getroot');
 
-// load source
-var modulejs_content = fs.readFileSync(path.join(__dirname, '../src/modulejs.js'), 'utf-8');
-var sandbox = {};
+var root = getRoot();
 var priv;
-vm.runInNewContext(modulejs_content, sandbox, 'modulejs.js');
-
 
 describe('modulejs._private', function () {
 
-
     beforeEach(function () {
-        priv = sandbox.modulejs.create()._private;
+        priv = root.modulejs.create()._private;
     });
 
     it('is plain object', function () {
@@ -39,14 +32,13 @@ describe('modulejs._private', function () {
             'isString',
             'resolve',
             'uniq'
-        ]);
+        ].sort());
     });
 
 
     describe('.isString()', function () {
 
         it('is function', function () {
-
             assert.ok(_.isFunction(priv.isString));
         });
 
@@ -67,7 +59,6 @@ describe('modulejs._private', function () {
             [0.0, false],
             [1.0, false]
         ], function (x) {
-
             var arg = x[0];
             var exp = x[1];
 
@@ -81,7 +72,6 @@ describe('modulejs._private', function () {
     describe('.isFunction()', function () {
 
         it('is function', function () {
-
             assert.ok(_.isFunction(priv.isFunction));
         });
 
@@ -102,7 +92,6 @@ describe('modulejs._private', function () {
             ['', false],
             ['test', false]
         ], function (x) {
-
             var arg = x[0];
             var exp = x[1];
 
@@ -116,7 +105,6 @@ describe('modulejs._private', function () {
     describe('.isArray()', function () {
 
         it('is function', function () {
-
             assert.ok(_.isFunction(priv.isArray));
         });
 
@@ -137,7 +125,6 @@ describe('modulejs._private', function () {
             ['', false],
             ['test', false]
         ], function (x) {
-
             var arg = x[0];
             var exp = x[1];
 
@@ -151,7 +138,6 @@ describe('modulejs._private', function () {
     describe('.isObject()', function () {
 
         it('is function', function () {
-
             assert.ok(_.isFunction(priv.isObject));
         });
 
@@ -172,7 +158,6 @@ describe('modulejs._private', function () {
             ['', false],
             ['test', false]
         ], function (x) {
-
             var arg = x[0];
             var exp = x[1];
 
@@ -284,33 +269,27 @@ describe('modulejs._private', function () {
     describe('.assert()', function () {
 
         it('is function', function () {
-
             assert.ok(_.isFunction(priv.assert));
         });
 
         it('throws when no arguments', function () {
-
             assert.throws(function () { priv.assert(); });
         });
 
         it('throws no error when expression is true', function () {
-
             assert.strictEqual(priv.assert(true), undefined);
         });
 
         it('throws error when expression is false', function () {
-
             assert.throws(function () { priv.assert(false); });
         });
 
         it('message is set correct', function () {
-
             var message = 'test';
 
-            assert.throws(function () { priv.assert(false, message); }, function (e) {
-
-                return e.message === '[modulejs] test';
-            });
+            assert.throws(function () {
+                priv.assert(false, message);
+            }, /\[modulejs\] test/);
         });
     });
 
@@ -318,12 +297,10 @@ describe('modulejs._private', function () {
     describe('.definitions', function () {
 
         it('is plain object', function () {
-
             assert.ok(_.isPlainObject(priv.definitions));
         });
 
-        it('starts empty', function () {
-
+        it('is empty', function () {
             assert.strictEqual(_.size(priv.definitions), 0);
         });
     });
@@ -332,12 +309,10 @@ describe('modulejs._private', function () {
     describe('.instances', function () {
 
         it('is plain object', function () {
-
             assert.ok(_.isPlainObject(priv.instances));
         });
 
-        it('starts empty', function () {
-
+        it('is empty', function () {
             assert.strictEqual(_.size(priv.instances), 0);
         });
     });
@@ -346,7 +321,6 @@ describe('modulejs._private', function () {
     describe('.resolve()', function () {
 
         it('is function', function () {
-
             assert.ok(_.isFunction(priv.resolve));
         });
     });
