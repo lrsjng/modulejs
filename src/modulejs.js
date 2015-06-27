@@ -1,7 +1,7 @@
 (function (root, factory) {
 'use strict';
 
-/*istanbul ignore else */
+// istanbul ignore else
 if (typeof exports === 'object') {
     module.exports = factory();
 } else {
