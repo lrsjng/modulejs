@@ -1,6 +1,7 @@
 'use strict';
 
 var assert = require('chai').assert;
+var sinon = require('sinon');
 
 describe('.require()', function () {
 
@@ -42,14 +43,14 @@ describe('.require()', function () {
     });
 
     it('calls constructor exactly once per id', function () {
-        var counter = 0;
-        def('a', function () { counter += 1; });
+        var spy = sinon.spy();
+        def('a', spy);
 
-        assert.strictEqual(counter, 0);
+        assert.strictEqual(spy.callCount, 0);
         req('a');
-        assert.strictEqual(counter, 1);
+        assert.strictEqual(spy.callCount, 1);
         req('a');
-        assert.strictEqual(counter, 1);
+        assert.strictEqual(spy.callCount, 1);
     });
 
     it('returns always the same instance per id', function () {

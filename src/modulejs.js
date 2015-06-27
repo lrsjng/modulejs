@@ -11,7 +11,6 @@ if (typeof exports === 'object') {
 }(this, function () {
     'use strict';
 
-    var UNDEFINED;
     var OBJ_PROTO = Object.prototype;
 
     // Returns a function that returns `true` if `x` is of the correct
@@ -29,7 +28,7 @@ if (typeof exports === 'object') {
     var isString = _create_is_x_fn('String');
 
     function is(x) {
-        return x !== UNDEFINED && x !== null;
+        return x !== undefined && x !== null;
     }
 
     // Short cut for `hasOwnProperty`.
@@ -38,16 +37,16 @@ if (typeof exports === 'object') {
     }
 
     // Iterates over all elements af an array or all own keys of an object.
-    function each(x, fn, ctx) {
+    function each(x, fn) {
         if (is(x) && isFunction(fn)) {
             if (is(x.length)) {
                 for (var i = 0, l = x.length; i < l; i += 1) {
-                    fn.call(ctx, x[i], i, x);
+                    fn(x[i], i, x);
                 }
             } else {
                 for (var k in x) {
                     if (has(x, k)) { // jshint ignore: line
-                        fn.call(ctx, x[k], k, x);
+                        fn(x[k], k, x);
                     }
                 }
             }
@@ -56,7 +55,7 @@ if (typeof exports === 'object') {
 
     // Returns `true` if `x` contains `val`, otherwise `false`.
     function contains(x, val) {
-        if (is(x) && is(x.length)) {
+        if (x && x.length) {
             for (var i = 0, l = x.length; i < l; i += 1) {
                 if (x[i] === val) {
                     return true;
@@ -69,16 +68,12 @@ if (typeof exports === 'object') {
     // Returns an new array containing no duplicates. Preserves first
     // occurence and order.
     function uniq(x) {
-        var elements = {};
         var result = [];
-
-        each(x, function (el) {
-            if (!has(elements, el)) {
-                result.push(el);
-                elements[el] = 1;
+        each(x, function (val) {
+            if (!contains(result, val)) {
+                result.push(val);
             }
         });
-
         return result;
     }
 
@@ -146,7 +141,7 @@ if (typeof exports === 'object') {
             }
 
             // create, memorize and return object
-            var obj = def.fn.apply(UNDEFINED, deps);
+            var obj = def.fn.apply(undefined, deps);
             resolvedInstances[id] = obj;
             return obj;
         }

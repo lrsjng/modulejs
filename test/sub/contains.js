@@ -21,6 +21,7 @@ describe('.contains()', function () {
         [[1], 1, true],
         [[1, 2], 1, true],
         [[1, 2, 3], 1, true],
+        ['abc', 'a', true],
 
         [undefined, undefined, false],
         [null, 1, false],
@@ -28,7 +29,8 @@ describe('.contains()', function () {
         [[], undefined, false],
         [[], null, false],
         [[], 1, false],
-        [[1, 2, 3], 4, false]
+        [[1, 2, 3], 4, false],
+        ['abc', 'x', false]
     ], function (x) {
         var arg1 = x[0];
         var arg2 = x[1];
