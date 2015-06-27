@@ -1,4 +1,4 @@
-/* modulejs 1.8.0 - http://larsjung.de/modulejs/ */
+/* modulejs 1.9.0 - http://larsjung.de/modulejs/ */
 (function (root, factory) {
 'use strict';
 
