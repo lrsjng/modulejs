@@ -2,6 +2,7 @@
 (function (root, factory) {
 'use strict';
 
+/*istanbul ignore else */
 if (typeof exports === 'object') {
     module.exports = factory();
 } else {
@@ -11,37 +12,38 @@ if (typeof exports === 'object') {
 }(this, function () {
     'use strict';
 
-    var _obj_proto = Object.prototype;
-    var _arr_proto = Array.prototype;
+    var UNDEFINED;
+    var OBJ_PROTO = Object.prototype;
+    var ARR_PROTO = Array.prototype;
 
     // Returns a function that returns `true` if `x` is of the correct
     // `type`, otherwise `false`.
     function _create_is_x_fn(type) {
         return function (x) {
-            return _obj_proto.toString.call(x) === '[object ' + type + ']';
+            return OBJ_PROTO.toString.call(x) === '[object ' + type + ']';
         };
     }
 
     // Type checking functions.
-    var isArray = Array.isArray;
+    var isArray = _create_is_x_fn('Array');
     var isFunction = _create_is_x_fn('Function');
     var isObject = _create_is_x_fn('Object');
     var isString = _create_is_x_fn('String');
 
     function is(x) {
-        return x !== undefined && x !== null;
+        return x !== UNDEFINED && x !== null;
     }
 
     // Short cut for `hasOwnProperty`.
     function has(x, id) {
-        return is(x) && _obj_proto.hasOwnProperty.call(x, id);
+        return is(x) && OBJ_PROTO.hasOwnProperty.call(x, id);
     }
 
     // Iterates over all elements af an array or all own keys of an object.
     function each(x, fn, ctx) {
         if (is(x) && isFunction(fn)) {
             if (is(x.length)) {
-                _arr_proto.forEach.call(x, fn, ctx);
+                ARR_PROTO.forEach.call(x, fn, ctx);
             } else {
                 Object.keys(x).forEach(function (key) {
                     fn.call(ctx, x[key], key, x);
@@ -52,7 +54,7 @@ if (typeof exports === 'object') {
 
     // Returns `true` if `x` contains `val`, otherwise `false`.
     function contains(x, val) {
-        return is(x) && _arr_proto.indexOf.call(x, val) >= 0;
+        return is(x) && ARR_PROTO.indexOf.call(x, val) >= 0;
     }
 
     // Returns an new array containing no duplicates. Preserves first
@@ -135,7 +137,7 @@ if (typeof exports === 'object') {
             }
 
             // create, memorize and return object
-            var obj = def.fn.apply(undefined, deps);
+            var obj = def.fn.apply(UNDEFINED, deps);
             resolvedInstances[id] = obj;
             return obj;
         }
