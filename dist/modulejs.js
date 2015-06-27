@@ -27,13 +27,9 @@ if (typeof exports === 'object') {
     var isFunction = _create_is_x_fn('Function');
     var isString = _create_is_x_fn('String');
 
-    function is(x) {
-        return x !== undefined && x !== null;
-    }
-
     // Short cut for `hasOwnProperty`.
     function has(x, id) {
-        return is(x) && OBJ_PROTO.hasOwnProperty.call(x, id);
+        return x !== undefined && x !== null && OBJ_PROTO.hasOwnProperty.call(x, id);
     }
 
     // Iterates over all elements af an array or all own keys of an object.
