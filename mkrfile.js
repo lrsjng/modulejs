@@ -1,4 +1,3 @@
-/*jshint node: true */
 'use strict';
 
 module.exports = function (suite) {
@@ -23,11 +22,8 @@ module.exports = function (suite) {
 
     suite.target('lint', [], 'lint all JavaScript files with JSHint').task(function () {
 
-        var fs = require('fs');
-        var jshint = JSON.parse(fs.readFileSync('.jshintrc', 'utf-8'));
-
         $(src + ': *.js')
-            .jshint(jshint, jshint.globals);
+            .jshint();
     });
 
     suite.target('release', ['clean', 'lint'], 'build all files and create a zipball').task(function () {

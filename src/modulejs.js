@@ -2,7 +2,7 @@
 'use strict';
 
 if (typeof exports === 'object') {
-    module.exports = factory(); // jshint ignore: line
+    module.exports = factory();
 } else {
     root.modulejs = factory();
 }
