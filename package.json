@@ -16,6 +16,7 @@
     "coverage": "istanbul cover _mocha -- -R dot"
   },
   "devDependencies": {
+    "chai": "^3.0.0",
     "fquery": "^0.16.4",
     "fquery-jshint": "^0.3.0",
     "fquery-jszip": "^0.5.1",

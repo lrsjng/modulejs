@@ -1,6 +1,6 @@
 'use strict';
 
-var assert = require('assert');
+var assert = require('chai').assert;
 var _ = require('lodash');
 
 describe('.state()', function () {
@@ -18,23 +18,65 @@ describe('.state()', function () {
     });
 
     it('is function', function () {
-        assert.ok(_.isFunction(state));
+        assert.isFunction(state);
     });
 
-    it('returns plain object', function () {
-        assert.ok(_.isPlainObject(state()));
+    it('no definitions', function () {
+        assert.isTrue(_.isPlainObject(state()));
+        assert.deepEqual(state(), {});
     });
 
-    it('returns plain object', function () {
+    it('one definition', function () {
+        def('a', {});
+        assert.isTrue(_.isPlainObject(state()));
+        assert.deepEqual(state(), {
+            a: {
+                deps: [],
+                init: false,
+                reqd: [],
+                reqs: []
+            }
+        });
+    });
+
+    it('two definitions with deps', function () {
         def('a', {});
         def('b', ['a'], {});
-        assert.ok(_.isPlainObject(state()));
+        assert.isTrue(_.isPlainObject(state()));
+        assert.deepEqual(state(), {
+            a: {
+                deps: [],
+                init: false,
+                reqd: ['b'],
+                reqs: []
+            },
+            b: {
+                deps: ['a'],
+                init: false,
+                reqd: [],
+                reqs: ['a']
+            }
+        });
     });
 
-    it('returns plain object', function () {
+    it('two definitions with deps and instance', function () {
         def('a', {});
         def('b', ['a'], {});
         req('a');
-        assert.ok(_.isPlainObject(state()));
+        assert.isTrue(_.isPlainObject(state()));
+        assert.deepEqual(state(), {
+            a: {
+                deps: [],
+                init: true,
+                reqd: ['b'],
+                reqs: []
+            },
+            b: {
+                deps: ['a'],
+                init: false,
+                reqd: [],
+                reqs: ['a']
+            }
+        });
     });
 });

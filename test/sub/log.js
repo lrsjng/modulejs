@@ -1,7 +1,6 @@
 'use strict';
 
-var assert = require('assert');
-var _ = require('lodash');
+var assert = require('chai').assert;
 
 describe('.log()', function () {
 
@@ -17,27 +16,38 @@ describe('.log()', function () {
         log = modjs.log;
     });
 
-    it('is function', function () {
-        assert.ok(_.isFunction(log));
+    it('no definitions', function () {
+        assert.strictEqual(log(), '\n');
+        assert.strictEqual(log(true), '\n');
     });
 
-    it('returns string', function () {
-        assert.ok(_.isString(log()));
-        assert.ok(_.isString(log(true)));
+    it('one definition', function () {
+        def('a', {});
+        assert.strictEqual(log(), '\n  a -> [  ]\n');
+        assert.strictEqual(log(true), '\n  a -> [  ]\n');
     });
 
-    it('returns string', function () {
+    it('two definitions with deps', function () {
         def('a', {});
         def('b', ['a'], {});
-        assert.ok(_.isString(log()));
-        assert.ok(_.isString(log(true)));
+        assert.strictEqual(log(), '\n  a -> [  ]\n  b -> [ a ]\n');
+        assert.strictEqual(log(true), '\n  a -> [ b ]\n  b -> [  ]\n');
     });
 
-    it('returns string', function () {
+    it('two definitions with deps and instance', function () {
         def('a', {});
         def('b', ['a'], {});
         req('a');
-        assert.ok(_.isString(log()));
-        assert.ok(_.isString(log(true)));
+        assert.strictEqual(log(), '\n* a -> [  ]\n  b -> [ a ]\n');
+        assert.strictEqual(log(true), '\n* a -> [ b ]\n  b -> [  ]\n');
+    });
+
+    it('in order of definition', function () {
+        def('c', {});
+        def('a', {});
+        def('d', ['c', 'b'], {});
+        def('b', ['a'], {});
+        assert.strictEqual(log(), '\n  c -> [  ]\n  a -> [  ]\n  d -> [ c, a, b ]\n  b -> [ a ]\n');
+        assert.strictEqual(log(true), '\n  c -> [ d ]\n  a -> [ d, b ]\n  d -> [  ]\n  b -> [ d ]\n');
     });
 });

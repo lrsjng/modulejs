@@ -1,7 +1,6 @@
 'use strict';
 
-var assert = require('assert');
-var _ = require('lodash');
+var assert = require('chai').assert;
 
 describe('.require()', function () {
 
@@ -16,39 +15,35 @@ describe('.require()', function () {
     });
 
     it('is function', function () {
-        assert.ok(_.isFunction(req));
+        assert.isFunction(req);
     });
 
-    it('error when no id', function () {
+    it('throws if no id', function () {
         assert.throws(function () { req(); }, /id must be string/);
     });
 
-    it('error when non-string id', function () {
+    it('throws if non-string id', function () {
         assert.throws(function () { req({}); }, /id must be string/);
     });
 
-    it('error when unknown id', function () {
+    it('throws if id is not defined', function () {
         assert.throws(function () { req('a'); }, /id not defined/);
     });
 
-    it('error when cyclic dependencies', function () {
+    it('throws on cyclic dependencies', function () {
         def('a', ['b'], {});
         def('b', ['a'], {});
         assert.throws(function () { req('a'); }, /circular dependencies/);
     });
 
     it('returns instance for known id', function () {
-        def('a', function () { return 'val-a'; });
+        def('a', 'val-a');
         assert.strictEqual(req('a'), 'val-a');
     });
 
     it('calls constructor exactly once per id', function () {
         var counter = 0;
-
-        def('a', function () {
-            counter += 1;
-            return {};
-        });
+        def('a', function () { counter += 1; });
 
         assert.strictEqual(counter, 0);
         req('a');
@@ -77,7 +72,7 @@ describe('.require()', function () {
         assert.strictEqual(req('g'), 'val-a');
     });
 
-    it('error when long cyclic dependencies', function () {
+    it('throws if long cyclic dependencies', function () {
         def('a', ['g'], {});
         def('b', ['a'], {});
         def('c', ['b'], {});
@@ -117,7 +112,7 @@ describe('.require()', function () {
         assert.strictEqual(req('c', {a: 'fake-a3'}), 'fake-a3');
     });
 
-    it('throws error for cyclic dependencies when fake dependencies don\'t break the cycle', function () {
+    it('throws for cyclic dependencies when fake dependencies don\'t break the cycle', function () {
         def('a', ['b'], {});
         def('b', ['a'], {});
 
