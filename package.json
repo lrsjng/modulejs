@@ -12,13 +12,15 @@
     "url": "https://github.com/lrsjng/modulejs.git"
   },
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha",
+    "coverage": "istanbul cover _mocha -- -R dot"
   },
   "devDependencies": {
     "fquery": "^0.16.4",
     "fquery-jshint": "^0.3.0",
     "fquery-jszip": "^0.5.1",
     "fquery-uglifyjs": "^0.3.0",
+    "istanbul": "^0.3.16",
     "lodash": "^3.9.3",
     "mkr": "^0.8.5",
     "mocha": "^2.2.5"

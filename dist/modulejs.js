@@ -1,7 +1,12 @@
 /* modulejs 1.8.0 - http://larsjung.de/modulejs/ */
 (function (root, factory) {
+'use strict';
 
-root.modulejs = factory(); // jshint ignore: line
+if (typeof exports === 'object') {
+    module.exports = factory(); // jshint ignore: line
+} else {
+    root.modulejs = factory();
+}
 
 }(this, function () {
     'use strict';
@@ -45,18 +50,18 @@ root.modulejs = factory(); // jshint ignore: line
         }
     }
 
-    // Returns `true` if array contains `element`, otherwise `false`.
+    // Returns `true` if `x` contains `val`, otherwise `false`.
     function contains(x, val) {
         return is(x) && _arr_proto.indexOf.call(x, val) >= 0;
     }
 
     // Returns an new array containing no duplicates. Preserves first
     // occurence and order.
-    function uniq(array) {
+    function uniq(x) {
         var elements = {};
         var result = [];
 
-        each(array, function (el) {
+        each(x, function (el) {
             if (!has(elements, el)) {
                 result.push(el);
                 elements[el] = 1;
@@ -140,7 +145,7 @@ root.modulejs = factory(); // jshint ignore: line
         function define(id, deps, def) {
 
             // sort arguments
-            if (arguments.length === 2) {
+            if (arguments.length < 3) {
                 def = deps;
                 deps = [];
             }
