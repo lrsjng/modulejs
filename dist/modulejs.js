@@ -38,16 +38,14 @@ if (typeof exports === 'object') {
 
     // Iterates over all elements af an array or all own keys of an object.
     function each(x, fn) {
-        if (is(x) && isFunction(fn)) {
-            if (is(x.length)) {
-                for (var i = 0, l = x.length; i < l; i += 1) {
-                    fn(x[i], i, x);
-                }
-            } else {
-                for (var k in x) {
-                    if (has(x, k)) { // jshint ignore: line
-                        fn(x[k], k, x);
-                    }
+        if (x && x.length) {
+            for (var i = 0, l = x.length; i < l; i += 1) {
+                fn(x[i], i, x);
+            }
+        } else {
+            for (var k in x) {
+                if (has(x, k)) {
+                    fn(x[k], k, x);
                 }
             }
         }
