@@ -7,8 +7,6 @@ root.modulejs = factory(); // jshint ignore: line
 
     var _obj_proto = Object.prototype;
     var _arr_proto = Array.prototype;
-    var _arr_forEach = _arr_proto.forEach;
-    var _arr_indexOf = _arr_proto.indexOf;
 
     // Returns a function that returns `true` if `x` is of the correct
     // `type`, otherwise `false`.
@@ -37,7 +35,7 @@ root.modulejs = factory(); // jshint ignore: line
     function each(x, fn, ctx) {
         if (is(x) && isFunction(fn)) {
             if (is(x.length)) {
-                _arr_forEach.call(x, fn, ctx);
+                _arr_proto.forEach.call(x, fn, ctx);
             } else {
                 Object.keys(x).forEach(function (key) {
                     fn.call(ctx, x[key], key, x);
@@ -48,7 +46,7 @@ root.modulejs = factory(); // jshint ignore: line
 
     // Returns `true` if array contains `element`, otherwise `false`.
     function contains(x, val) {
-        return is(x) && _arr_indexOf.call(x, val) >= 0;
+        return is(x) && _arr_proto.indexOf.call(x, val) >= 0;
     }
 
     // Returns an new array containing no duplicates. Preserves first
