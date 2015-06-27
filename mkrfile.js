@@ -1,12 +1,12 @@
 'use strict';
 
 module.exports = function (suite) {
-
     var path = require('path');
     var root = path.resolve(__dirname);
     var src = path.join(root, 'src');
     var dist = path.join(root, 'dist');
     var build = path.join(root, 'build');
+    var coverage = path.join(root, 'coverage');
 
     var $ = require('fquery');
     $.plugin('fquery-jshint');
@@ -16,18 +16,14 @@ module.exports = function (suite) {
     suite.defaults('release');
 
     suite.target('clean', [], 'delete build folder').task(function () {
-
-        $([dist, build], {dirs: true}).delete();
+        $([dist, build, coverage], {dirs: true}).delete();
     });
 
     suite.target('lint', [], 'lint all JavaScript files with JSHint').task(function () {
-
-        $(src + ': *.js')
-            .jshint();
+        $(src + ': *.js').jshint();
     });
 
     suite.target('release', ['clean', 'lint'], 'build all files and create a zipball').task(function () {
-
         var pkg = require('./package.json');
         var header = '/* ' + pkg.displayName + ' ' + pkg.version + ' - ' + pkg.homepage + ' */\n';
         var target = path.join(build, pkg.name + '-' + pkg.version + '.zip');
