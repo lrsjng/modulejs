@@ -14,7 +14,6 @@ if (typeof exports === 'object') {
 
     var UNDEFINED;
     var OBJ_PROTO = Object.prototype;
-    var ARR_PROTO = Array.prototype;
 
     // Returns a function that returns `true` if `x` is of the correct
     // `type`, otherwise `false`.
@@ -43,18 +42,29 @@ if (typeof exports === 'object') {
     function each(x, fn, ctx) {
         if (is(x) && isFunction(fn)) {
             if (is(x.length)) {
-                ARR_PROTO.forEach.call(x, fn, ctx);
+                for (var i = 0, l = x.length; i < l; i += 1) {
+                    fn.call(ctx, x[i], i, x);
+                }
             } else {
-                Object.keys(x).forEach(function (key) {
-                    fn.call(ctx, x[key], key, x);
-                });
+                for (var k in x) {
+                    if (has(x, k)) { // jshint ignore: line
+                        fn.call(ctx, x[k], k, x);
+                    }
+                }
             }
         }
     }
 
     // Returns `true` if `x` contains `val`, otherwise `false`.
     function contains(x, val) {
-        return is(x) && ARR_PROTO.indexOf.call(x, val) >= 0;
+        if (is(x) && is(x.length)) {
+            for (var i = 0, l = x.length; i < l; i += 1) {
+                if (x[i] === val) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     // Returns an new array containing no duplicates. Preserves first

@@ -3,7 +3,7 @@
 [![license][license-img]][github] [![web][web-img]][web] [![github][github-img]][github] [![bower][bower-img]][github]
 [![build status][travis-img]][travis]
 
-Lightweight JavaScript module system. Works in modern browsers and IE9+.
+Lightweight JavaScript module system.
 
 
 ## License
