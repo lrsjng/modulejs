@@ -46,7 +46,6 @@ describe('modulejs', function () {
                 'instances',
                 'isArray',
                 'isFunction',
-                'isObject',
                 'isString',
                 'resolve',
                 'uniq'
@@ -61,7 +60,6 @@ describe('modulejs', function () {
         require('./sub/instances');
         require('./sub/isArray');
         require('./sub/isFunction');
-        require('./sub/isObject');
         require('./sub/isString');
         require('./sub/resolve');
         require('./sub/uniq');

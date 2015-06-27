@@ -24,7 +24,6 @@ if (typeof exports === 'object') {
     // Type checking functions.
     var isArray = _create_is_x_fn('Array');
     var isFunction = _create_is_x_fn('Function');
-    var isObject = _create_is_x_fn('Object');
     var isString = _create_is_x_fn('String');
 
     function is(x) {
@@ -242,7 +241,6 @@ if (typeof exports === 'object') {
                 instances: instances,
                 isArray: isArray,
                 isFunction: isFunction,
-                isObject: isObject,
                 isString: isString,
                 resolve: resolve,
                 uniq: uniq
