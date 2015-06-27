@@ -84,18 +84,16 @@ if (typeof exports === 'object') {
         // Module instances.
         var instances = {};
 
-        // Resolves an `id` to an object, or if `onlyDepIds` is `true` only
-        // returns dependency-ids. `stack` is used internal to check for
-        // circular dependencies.
-        // If defined, `resolvedInstances` is used instead of the already
-        // memorized `instances` to allow faking dependencies.
-        function resolve(id, onlyDepIds, stack, resolvedInstances) {
+        // Resolves `id` to an object. If `mixed` is `true` only returns
+        // dependency-IDs. If `mixed` is an object it is used instead of the
+        // already memorized `instances` to allow mock-dependencies. `stack`
+        // is used internal to check for circular dependencies.
+        function resolve(id, mixed, stack) {
 
             // check arguments
             assert(isString(id), 'id must be string: ' + id);
-
-            // Use `resolvedInstances` if defined
-            resolvedInstances = resolvedInstances || instances;
+            var onlyDepIds = mixed === true;
+            var resolvedInstances = (onlyDepIds ? undefined : mixed) || instances;
 
             // if a module is required that was already created return that
             // object
@@ -121,10 +119,10 @@ if (typeof exports === 'object') {
                 assert(!contains(stack, depId), 'circular dependencies: ' + depId + ' in ' + stack);
 
                 if (onlyDepIds) {
-                    deps = deps.concat(resolve(depId, onlyDepIds, stack));
+                    deps = deps.concat(resolve(depId, mixed, stack));
                     deps.push(depId);
                 } else {
-                    deps.push(resolve(depId, onlyDepIds, stack, resolvedInstances));
+                    deps.push(resolve(depId, mixed, stack));
                 }
             });
 
@@ -140,7 +138,7 @@ if (typeof exports === 'object') {
         }
 
         // Defines a module for `id: String`, optional `deps: Array[String]`,
-        // `def: Object/function`.
+        // `def: mixed`.
         function define(id, deps, def) {
 
             // sort arguments
@@ -161,11 +159,11 @@ if (typeof exports === 'object') {
             };
         }
 
-        // Returns an instance for `id`. If a `fakeInstances` object is given,
-        // it is used to resolve the dependencies.
-        function require(id, fakeInstances) {
+        // Returns an instance for `id`. If a `mocks` object is given, it is
+        // used to resolve the dependencies.
+        function require(id, mocks) {
 
-            return resolve(id, false, [], fakeInstances);
+            return resolve(id, mocks);
         }
 
         // Returns an object that holds infos about the current definitions
@@ -179,7 +177,7 @@ if (typeof exports === 'object') {
                 res[id] = {
 
                     // direct dependencies
-                    deps: def.deps.slice(0),
+                    deps: def.deps.slice(),
 
                     // transitive dependencies
                     reqs: resolve(id, true),
