@@ -1,37 +1,31 @@
-'use strict';
+const {test, assert} = require('scar');
+const modulejs = require('../../lib/modulejs');
 
-var assert = require('assert');
-var _ = require('lodash');
+test('modulejs._private.assert is function', () => {
+    const ass = modulejs.create()._private.assert;
+    assert.equal(typeof ass, 'function');
+});
 
-describe('.assert()', function () {
+test('modulejs._private.assert() throws', () => {
+    const ass = modulejs.create()._private.assert;
+    assert.throws(() => ass());
+});
 
-    var ass;
+test('modulejs._private.assert(true) does not throw', () => {
+    const ass = modulejs.create()._private.assert;
+    assert.equal(ass(true), undefined);
+});
 
-    beforeEach(function () {
-        ass = this.modulejs.create()._private.assert;
-    });
+test('modulejs._private.assert(false) throws', () => {
+    const ass = modulejs.create()._private.assert;
+    assert.throws(() => ass(false));
+});
 
-    it('is function', function () {
-        assert.ok(_.isFunction(ass));
-    });
+test('modulejs._private.assert(false, msg) throws correct message', () => {
+    const message = 'test';
+    const ass = modulejs.create()._private.assert;
 
-    it('throws when no arguments', function () {
-        assert.throws(function () { ass(); });
-    });
-
-    it('throws no error when expression is true', function () {
-        assert.strictEqual(ass(true), undefined);
-    });
-
-    it('throws error when expression is false', function () {
-        assert.throws(function () { ass(false); });
-    });
-
-    it('message is set correct', function () {
-        var message = 'test';
-
-        assert.throws(function () {
-            ass(false, message);
-        }, /\[modulejs\] test/);
-    });
+    assert.throws(() => {
+        ass(false, message);
+    }, /\[modulejs\] test/);
 });

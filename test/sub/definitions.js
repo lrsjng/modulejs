@@ -1,15 +1,10 @@
-'use strict';
+const {test, assert} = require('scar');
+const modulejs = require('../../lib/modulejs');
 
-var assert = require('assert');
-var _ = require('lodash');
+test('modulejs._private.definitions is plain object', () => {
+    assert.equal(typeof modulejs._private.definitions, 'object');
+});
 
-describe('.definitions', function () {
-
-    it('is plain object', function () {
-        assert.ok(_.isPlainObject(this.modulejs._private.definitions));
-    });
-
-    it('is empty', function () {
-        assert.strictEqual(_.size(this.modulejs._private.definitions), 0);
-    });
+test('modulejs._private.definitions is empty', () => {
+    assert.equal(Object.keys(modulejs._private.definitions).length, 0);
 });

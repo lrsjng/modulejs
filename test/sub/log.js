@@ -1,53 +1,42 @@
-'use strict';
+const {test, assert} = require('scar');
+const modulejs = require('../../lib/modulejs');
 
-var assert = require('chai').assert;
+test('modulejs.log() no definitions', () => {
+    const modjs = modulejs.create();
+    assert.equal(modjs.log(), '\n');
+    assert.equal(modjs.log(true), '\n');
+});
 
-describe('.log()', function () {
+test('modulejs.log() one definition', () => {
+    const modjs = modulejs.create();
+    modjs.define('a', {});
+    assert.equal(modjs.log(), '\n  a -> [  ]\n');
+    assert.equal(modjs.log(true), '\n  a -> [  ]\n');
+});
 
-    var modjs;
-    var def;
-    var req;
-    var log;
+test('modulejs.log() two definitions with deps', () => {
+    const modjs = modulejs.create();
+    modjs.define('a', {});
+    modjs.define('b', ['a'], {});
+    assert.equal(modjs.log(), '\n  a -> [  ]\n  b -> [ a ]\n');
+    assert.equal(modjs.log(true), '\n  a -> [ b ]\n  b -> [  ]\n');
+});
 
-    beforeEach(function () {
-        modjs = this.modulejs.create();
-        def = modjs.define;
-        req = modjs.require;
-        log = modjs.log;
-    });
+test('modulejs.log() two definitions with deps and instance', () => {
+    const modjs = modulejs.create();
+    modjs.define('a', {});
+    modjs.define('b', ['a'], {});
+    modjs.require('a');
+    assert.equal(modjs.log(), '\n* a -> [  ]\n  b -> [ a ]\n');
+    assert.equal(modjs.log(true), '\n* a -> [ b ]\n  b -> [  ]\n');
+});
 
-    it('no definitions', function () {
-        assert.strictEqual(log(), '\n');
-        assert.strictEqual(log(true), '\n');
-    });
-
-    it('one definition', function () {
-        def('a', {});
-        assert.strictEqual(log(), '\n  a -> [  ]\n');
-        assert.strictEqual(log(true), '\n  a -> [  ]\n');
-    });
-
-    it('two definitions with deps', function () {
-        def('a', {});
-        def('b', ['a'], {});
-        assert.strictEqual(log(), '\n  a -> [  ]\n  b -> [ a ]\n');
-        assert.strictEqual(log(true), '\n  a -> [ b ]\n  b -> [  ]\n');
-    });
-
-    it('two definitions with deps and instance', function () {
-        def('a', {});
-        def('b', ['a'], {});
-        req('a');
-        assert.strictEqual(log(), '\n* a -> [  ]\n  b -> [ a ]\n');
-        assert.strictEqual(log(true), '\n* a -> [ b ]\n  b -> [  ]\n');
-    });
-
-    it('in order of definition', function () {
-        def('c', {});
-        def('a', {});
-        def('d', ['c', 'b'], {});
-        def('b', ['a'], {});
-        assert.strictEqual(log(), '\n  c -> [  ]\n  a -> [  ]\n  d -> [ c, a, b ]\n  b -> [ a ]\n');
-        assert.strictEqual(log(true), '\n  c -> [ d ]\n  a -> [ d, b ]\n  d -> [  ]\n  b -> [ d ]\n');
-    });
+test('modulejs.log() in order of definition', () => {
+    const modjs = modulejs.create();
+    modjs.define('c', {});
+    modjs.define('a', {});
+    modjs.define('d', ['c', 'b'], {});
+    modjs.define('b', ['a'], {});
+    assert.equal(modjs.log(), '\n  c -> [  ]\n  a -> [  ]\n  d -> [ c, a, b ]\n  b -> [ a ]\n');
+    assert.equal(modjs.log(true), '\n  c -> [ d ]\n  a -> [ d, b ]\n  d -> [  ]\n  b -> [ d ]\n');
 });

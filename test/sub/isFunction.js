@@ -1,43 +1,31 @@
-'use strict';
+const {test, assert, insp} = require('scar');
+const modulejs = require('../../lib/modulejs');
+const isFunction = modulejs._private.isFunction;
 
-var assert = require('assert');
-var insp = require('util').inspect;
-var _ = require('lodash');
+test('modulejs._private.isFunction is function', () => {
+    assert.equal(typeof isFunction, 'function');
+});
 
-describe('.isFunction()', function () {
+[
+    [() => {}, true],
 
-    var isFunction;
+    [[], false],
+    [{}, false],
+    [new RegExp(), false],
+    [undefined, false],
+    [true, false],
+    [false, false],
+    [null, false],
+    [0, false],
+    [1, false],
+    [0.0, false],
+    [1.0, false],
+    ['', false],
+    ['test', false]
+].forEach(x => {
+    const [arg, exp] = x;
 
-    before(function () {
-        isFunction = this.modulejs._private.isFunction;
-    });
-
-    it('is function', function () {
-        assert.ok(_.isFunction(isFunction));
-    });
-
-    _.each([
-        [function () {}, true],
-
-        [[], false],
-        [{}, false],
-        [new RegExp(), false],
-        [undefined, false],
-        [true, false],
-        [false, false],
-        [null, false],
-        [0, false],
-        [1, false],
-        [0.0, false],
-        [1.0, false],
-        ['', false],
-        ['test', false]
-    ], function (x) {
-        var arg = x[0];
-        var exp = x[1];
-
-        it('.isFunction(' + insp(arg) + ')  ->  ' + insp(exp), function () {
-            assert.strictEqual(isFunction(arg), exp);
-        });
+    test(`modulejs._private.isFunction(${insp(arg)}) === ${insp(exp)}`, () => {
+        assert.equal(isFunction(arg), exp);
     });
 });

@@ -1,43 +1,31 @@
-'use strict';
+const {test, assert, insp} = require('scar');
+const modulejs = require('../../lib/modulejs');
+const isArray = modulejs._private.isArray;
 
-var assert = require('assert');
-var insp = require('util').inspect;
-var _ = require('lodash');
+test('modulejs._private.isArray is function', () => {
+    assert.equal(typeof isArray, 'function');
+});
 
-describe('.isArray()', function () {
+[
+    [[], true],
 
-    var isArray;
+    [{}, false],
+    [() => {}, false],
+    [new RegExp(), false],
+    [undefined, false],
+    [true, false],
+    [false, false],
+    [null, false],
+    [0, false],
+    [1, false],
+    [0.0, false],
+    [1.0, false],
+    ['', false],
+    ['test', false]
+].forEach(x => {
+    const [arg, exp] = x;
 
-    before(function () {
-        isArray = this.modulejs._private.isArray;
-    });
-
-    it('is function', function () {
-        assert.ok(_.isFunction(isArray));
-    });
-
-    _.each([
-        [[], true],
-
-        [{}, false],
-        [function () {}, false],
-        [new RegExp(), false],
-        [undefined, false],
-        [true, false],
-        [false, false],
-        [null, false],
-        [0, false],
-        [1, false],
-        [0.0, false],
-        [1.0, false],
-        ['', false],
-        ['test', false]
-    ], function (x) {
-        var arg = x[0];
-        var exp = x[1];
-
-        it('.isArray(' + insp(arg) + ')  ->  ' + insp(exp), function () {
-            assert.strictEqual(isArray(arg), exp);
-        });
+    test('modulejs._private.isArray(' + insp(arg) + ') === ' + insp(exp), () => {
+        assert.equal(isArray(arg), exp);
     });
 });

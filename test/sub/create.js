@@ -1,38 +1,33 @@
-'use strict';
+const {test, assert} = require('scar');
+const modulejs = require('../../lib/modulejs');
 
-var assert = require('assert');
-var _ = require('lodash');
+test('modulejs.create is function', () => {
+    assert.equal(typeof modulejs.create, 'function');
+});
 
-describe('.create()', function () {
+test('modulejs.create() returns plain object', () => {
+    assert.equal(typeof modulejs.create(), 'object');
+});
 
-    it('is function', function () {
-        assert.ok(_.isFunction(this.modulejs.create));
-    });
+test('modulejs.create instances work independently', () => {
+    const modjs1 = modulejs.create();
+    const modjs2 = modulejs.create();
 
-    it('returns plain object', function () {
-        assert.ok(_.isPlainObject(this.modulejs.create()));
-    });
+    assert.deepEqual(Object.keys(modjs1.state()), []);
+    assert.deepEqual(Object.keys(modjs2.state()), []);
 
-    it('instances work independently', function () {
-        var modjs1 = this.modulejs.create();
-        var modjs2 = this.modulejs.create();
+    modjs1.define('a', {});
 
-        assert.deepEqual(_.keys(modjs1.state()), []);
-        assert.deepEqual(_.keys(modjs2.state()), []);
+    assert.deepEqual(Object.keys(modjs1.state()), ['a']);
+    assert.deepEqual(Object.keys(modjs2.state()), []);
 
-        modjs1.define('a', {});
+    modjs2.define('b', {});
 
-        assert.deepEqual(_.keys(modjs1.state()), ['a']);
-        assert.deepEqual(_.keys(modjs2.state()), []);
+    assert.deepEqual(Object.keys(modjs1.state()), ['a']);
+    assert.deepEqual(Object.keys(modjs2.state()), ['b']);
 
-        modjs2.define('b', {});
-
-        assert.deepEqual(_.keys(modjs1.state()), ['a']);
-        assert.deepEqual(_.keys(modjs2.state()), ['b']);
-
-        modjs1.require('a');
-        assert.throws(function () { modjs1.require('b'); }, /id not defined/);
-        modjs2.require('b');
-        assert.throws(function () { modjs2.require('a'); }, /id not defined/);
-    });
+    modjs1.require('a');
+    assert.throws(() => modjs1.require('b'), /id not defined/);
+    modjs2.require('b');
+    assert.throws(() => modjs2.require('a'), /id not defined/);
 });

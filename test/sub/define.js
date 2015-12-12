@@ -1,113 +1,112 @@
-'use strict';
+const {test, assert, insp} = require('scar');
+const modulejs = require('../../lib/modulejs');
 
-var insp = require('util').inspect;
-var assert = require('chai').assert;
-var _ = require('lodash');
+test('modulejs.define is function', () => {
+    assert.equal(typeof modulejs.define, 'function');
+});
 
-describe('.define()', function () {
+test('modulejs.define() throws', () => {
+    const modjs = modulejs.create();
+    assert.throws(() => modjs.define(), /id must be string/);
+});
 
-    var modjs;
-    var def;
-    var defs;
+test('modulejs.define() throws if non-string id', () => {
+    const modjs = modulejs.create();
+    assert.throws(() => modjs.define(true, [], {}), /id must be string/);
+});
 
-    beforeEach(function () {
-        modjs = this.modulejs.create();
-        def = modjs.define;
-        defs = modjs._private.definitions;
-    });
+test('modulejs.define() throws if non-array dependencies', () => {
+    const modjs = modulejs.create();
+    assert.throws(() => modjs.define('a', true, {}), /deps must be array/);
+});
 
-    it('is function', function () {
-        assert.isFunction(def);
-    });
+test('modulejs.define() returns undefined', () => {
+    const modjs = modulejs.create();
+    assert.equal(modjs.define('a'), undefined);
+});
 
-    it('throws if no arguments', function () {
-        assert.throws(function () { def(); }, /id must be string/);
-    });
+test('modulejs.define() throws if id already defined', () => {
+    const modjs = modulejs.create();
+    assert.equal(modjs.define('a'), undefined);
+    assert.throws(() => modjs.define('a'), /id already defined/);
+});
 
-    it('throws if non-string id', function () {
-        assert.throws(function () { def(true, [], {}); }, /id must be string/);
-    });
+test('modulejs.define(id)  ->  .define(id, [], function () { return undefined; })', () => {
+    const modjs = modulejs.create();
+    const defs = modjs._private.definitions;
+    const id = 'a';
+    assert.equal(modjs.define(id), undefined);
 
-    it('throws if non-array dependencies', function () {
-        assert.throws(function () { def('a', true, {}); }, /deps must be array/);
-    });
+    assert.equal(typeof defs[id], 'object');
+    assert.equal(defs[id].id, id);
+    assert.deepEqual(defs[id].deps, []);
+    assert.equal(typeof defs[id].fn, 'function');
+    assert.equal(defs[id].fn(), undefined);
+});
 
-    it('returns undefined', function () {
-        assert.strictEqual(def('a'), undefined);
-    });
+test('modulejs.define(id, fn)  ->  .define(id, [], fn)', () => {
+    const modjs = modulejs.create();
+    const defs = modjs._private.definitions;
+    const id = 'a';
+    const fn = () => {};
+    assert.equal(modjs.define(id, fn), undefined);
 
-    it('throws if id already defined', function () {
-        assert.strictEqual(def('a'), undefined);
-        assert.throws(function () { def('a'); }, /id already defined/);
-    });
+    assert.equal(typeof defs[id], 'object');
+    assert.equal(defs[id].id, id);
+    assert.deepEqual(defs[id].deps, []);
+    assert.equal(defs[id].fn, fn);
+});
 
-    it('.define(id)  ->  .define(id, [], function () { return undefined; })', function () {
-        var id = 'a';
-        assert.strictEqual(def(id), undefined);
+test('modulejs.define(id, arr, fn)  ->  .define(id, arr, fn)', () => {
+    const modjs = modulejs.create();
+    const defs = modjs._private.definitions;
+    const id = 'a';
+    const arr = [];
+    const fn = () => {};
+    assert.equal(modjs.define(id, fn), undefined);
 
-        assert.isTrue(_.isPlainObject(defs[id]));
-        assert.strictEqual(defs[id].id, id);
+    assert.equal(typeof defs[id], 'object');
+    assert.equal(defs[id].id, id);
+    assert.deepEqual(defs[id].deps, arr);
+    assert.equal(defs[id].fn, fn);
+});
+
+[
+    undefined,
+    null,
+    true,
+    false,
+    0,
+    1,
+    [],
+    {},
+    ''
+].forEach(x => {
+    test(`modulejs.define(id, ${insp(x)})  ->  .define(id, [], function () { return ${insp(x)}; })`, () => {
+        const modjs = modulejs.create();
+        const defs = modjs._private.definitions;
+        const id = 'a';
+        assert.equal(modjs.define(id, x), undefined);
+
+        assert.equal(typeof defs[id], 'object');
+        assert.equal(defs[id].id, id);
         assert.deepEqual(defs[id].deps, []);
-        assert.isFunction(defs[id].fn);
-        assert.strictEqual(defs[id].fn(), undefined);
+        assert.notEqual(defs[id].deps, x);
+        assert.equal(typeof defs[id].fn, 'function');
+        assert.equal(defs[id].fn(), x);
     });
 
-    it('.define(id, fn)  ->  .define(id, [], fn)', function () {
-        var id = 'a';
-        var fn = function () {};
-        assert.strictEqual(def(id, fn), undefined);
+    test(`modulejs.define(id, arr, ${insp(x)})  ->  .define(id, arr, function () { return ${insp(x)}; })`, () => {
+        const modjs = modulejs.create();
+        const defs = modjs._private.definitions;
+        const id = 'a';
+        const arr = [];
+        assert.equal(modjs.define(id, x), undefined);
 
-        assert.isTrue(_.isPlainObject(defs[id]));
-        assert.strictEqual(defs[id].id, id);
-        assert.deepEqual(defs[id].deps, []);
-        assert.strictEqual(defs[id].fn, fn);
-    });
-
-    it('.define(id, arr, fn)  ->  .define(id, arr, fn)', function () {
-        var id = 'a';
-        var arr = [];
-        var fn = function () {};
-        assert.strictEqual(def(id, fn), undefined);
-
-        assert.isTrue(_.isPlainObject(defs[id]));
-        assert.strictEqual(defs[id].id, id);
+        assert.equal(typeof defs[id], 'object');
+        assert.equal(defs[id].id, id);
         assert.deepEqual(defs[id].deps, arr);
-        assert.strictEqual(defs[id].fn, fn);
-    });
-
-    _.each([
-        undefined,
-        null,
-        true,
-        false,
-        0,
-        1,
-        [],
-        {},
-        ''
-    ], function (x) {
-        it('.define(id, ' + insp(x) + ')  ->  .define(id, [], function () { return ' + insp(x) + '; })', function () {
-            var id = 'a';
-            assert.strictEqual(def(id, x), undefined);
-
-            assert.isTrue(_.isPlainObject(defs[id]));
-            assert.strictEqual(defs[id].id, id);
-            assert.deepEqual(defs[id].deps, []);
-            assert.notStrictEqual(defs[id].deps, x);
-            assert.isFunction(defs[id].fn);
-            assert.strictEqual(defs[id].fn(), x);
-        });
-
-        it('.define(id, arr, ' + insp(x) + ')  ->  .define(id, arr, function () { return ' + insp(x) + '; })', function () {
-            var id = 'a';
-            var arr = [];
-            assert.strictEqual(def(id, x), undefined);
-
-            assert.isTrue(_.isPlainObject(defs[id]));
-            assert.strictEqual(defs[id].id, id);
-            assert.deepEqual(defs[id].deps, arr);
-            assert.isFunction(defs[id].fn);
-            assert.strictEqual(defs[id].fn(), x);
-        });
+        assert.equal(typeof defs[id].fn, 'function');
+        assert.equal(defs[id].fn(), x);
     });
 });

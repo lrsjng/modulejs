@@ -1,5 +1,6 @@
 build
 coverage
-local
+dist
+es5
 node_modules
-npm-debug.log
+**/vendor

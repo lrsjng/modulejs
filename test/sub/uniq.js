@@ -1,39 +1,26 @@
-'use strict';
+const {test, assert, insp} = require('scar');
+const modulejs = require('../../lib/modulejs');
 
-var assert = require('assert');
-var insp = require('util').inspect;
-var _ = require('lodash');
+test('modulejs._private.uniq is function', () => {
+    assert.equal(typeof modulejs._private.uniq, 'function');
+});
 
-describe('.uniq()', function () {
+[
+    [null, []],
+    [undefined, []],
+    [[], []],
+    [[1], [1]],
+    [[1, 2], [1, 2]],
+    [[1, 2, 1], [1, 2]],
+    [[1, 1, 2], [1, 2]],
+    [[1, 2, 2], [1, 2]],
+    [[1, 2, 3, 4], [1, 2, 3, 4]],
+    [[1, 2, 3, 2, 1, 4, 3], [1, 2, 3, 4]],
+    ['ababc', ['a', 'b', 'c']]
+].forEach(x => {
+    const [arg, exp] = x;
 
-    var uniq;
-
-    before(function () {
-        uniq = this.modulejs._private.uniq;
-    });
-
-    it('is function', function () {
-        assert.ok(_.isFunction(uniq));
-    });
-
-    _.each([
-        [null, []],
-        [undefined, []],
-        [[], []],
-        [[1], [1]],
-        [[1, 2], [1, 2]],
-        [[1, 2, 1], [1, 2]],
-        [[1, 1, 2], [1, 2]],
-        [[1, 2, 2], [1, 2]],
-        [[1, 2, 3, 4], [1, 2, 3, 4]],
-        [[1, 2, 3, 2, 1, 4, 3], [1, 2, 3, 4]],
-        ['ababc', ['a', 'b', 'c']]
-    ], function (x) {
-        var arg = x[0];
-        var exp = x[1];
-
-        it('.uniq(' + insp(arg) + ')  ->  ' + insp(exp), function () {
-            assert.deepEqual(uniq(arg), exp);
-        });
+    test(`modulejs._private.uniq(${insp(arg)}) === ${insp(exp)}`, () => {
+        assert.deepEqual(modulejs._private.uniq(arg), exp);
     });
 });

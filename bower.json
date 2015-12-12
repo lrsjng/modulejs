@@ -1,10 +1,10 @@
 {
   "name": "modulejs",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "Lightweight JavaScript module system.",
-  "homepage": "http://larsjung.de/modulejs/",
+  "homepage": "https://larsjung.de/modulejs/",
   "authors": [
-    "Lars Jung <lrsjng@gmail.com> (http://larsjung.de)"
+    "Lars Jung <lrsjng@gmail.com> (https://larsjung.de)"
   ],
   "main": "dist/modulejs.js",
   "license": "MIT",
