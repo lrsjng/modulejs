@@ -1,6 +1,5 @@
 {
   "name": "modulejs",
-  "version": "1.10.0",
   "description": "Lightweight JavaScript module system.",
   "homepage": "https://larsjung.de/modulejs/",
   "authors": [

@@ -1,6 +1,6 @@
 {
-  "name": "modulejs",
-  "version": "1.10.0",
+  "name": "@lrsjng/modulejs",
+  "version": "1.11.0",
   "description": "Lightweight JavaScript module system.",
   "homepage": "https://larsjung.de/modulejs/",
   "bugs": "https://github.com/lrsjng/modulejs/issues",
@@ -15,8 +15,7 @@
     "lint": "eslint .",
     "test": "node -r babel-core/register test/tests.js",
     "cover": "babel-node node_modules/.bin/isparta cover --dir coverage --report text --report html test/tests.js",
-    "ghu": "node -r babel-core/register ghu.js",
-    "build": "npm run -s ghu release"
+    "build": "node -r babel-core/register ghu.js"
   },
   "devDependencies": {
     "babel-cli": "6.3.17",
