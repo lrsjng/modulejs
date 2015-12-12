@@ -1,5 +1,5 @@
 const {test, assert, insp} = require('scar');
-const modulejs = require('../../lib/modulejs');
+const modulejs = require('../loader').modulejs;
 const has = modulejs._private.has;
 
 test('modulejs._private.has is function', () => {

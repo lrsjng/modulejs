@@ -1,6 +1,6 @@
 const {test, assert, insp} = require('scar');
 const sinon = require('sinon');
-const modulejs = require('../../lib/modulejs');
+const modulejs = require('../loader').modulejs;
 const each = modulejs._private.each;
 
 test('modulejs._private.each is function', () => {

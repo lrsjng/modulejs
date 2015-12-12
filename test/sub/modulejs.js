@@ -1,9 +1,5 @@
 const {test, assert, insp} = require('scar');
-const modulejs = require('../../lib/modulejs');
-
-test('modulejs is object', () => {
-    assert.equal(typeof modulejs, 'object');
-});
+const loader = require('../loader');
 
 const PROPS = [
     'create',
@@ -14,6 +10,18 @@ const PROPS = [
     '_private'
 ];
 
-test(`modulejs has the right props: ${insp(PROPS)}`, () => {
-    assert.deepEqual(Object.keys(modulejs).sort(), PROPS.sort());
+test('run tests with sandboxed minified version (loader.modulejs === loader.min_root)', () => {
+    assert.equal(loader.modulejs, loader.min_root);
+});
+
+Object.keys(loader).forEach(key => {
+    const modjs = loader[key];
+
+    test(`modulejs (${key}) is object`, () => {
+        assert.equal(typeof modjs, 'object');
+    });
+
+    test(`modulejs (${key}) has the right props: ${insp(PROPS)}`, () => {
+        assert.deepEqual(Object.keys(modjs).sort(), PROPS.sort());
+    });
 });

@@ -1,6 +1,6 @@
 const {test, assert} = require('scar');
 const sinon = require('sinon');
-const modulejs = require('../../lib/modulejs');
+const modulejs = require('../loader').modulejs;
 
 test('modulejs.require is function', () => {
     const modjs = modulejs.create();

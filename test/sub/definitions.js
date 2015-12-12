@@ -1,5 +1,5 @@
 const {test, assert} = require('scar');
-const modulejs = require('../../lib/modulejs');
+const modulejs = require('../loader').modulejs;
 
 test('modulejs._private.definitions is plain object', () => {
     assert.equal(typeof modulejs._private.definitions, 'object');

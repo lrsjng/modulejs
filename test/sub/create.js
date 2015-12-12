@@ -1,5 +1,5 @@
 const {test, assert} = require('scar');
-const modulejs = require('../../lib/modulejs');
+const modulejs = require('../loader').modulejs;
 
 test('modulejs.create is function', () => {
     assert.equal(typeof modulejs.create, 'function');

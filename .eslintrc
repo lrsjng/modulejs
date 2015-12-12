@@ -179,7 +179,7 @@
     padded-blocks: [2, never]
     prefer-arrow-callback: 2
     prefer-const: 1
-    prefer-reflect: 1
+    prefer-reflect: 0 ###
     prefer-spread: 2
     prefer-template: 0 ###
     quote-props: [2, as-needed]

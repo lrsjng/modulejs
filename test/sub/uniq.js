@@ -1,5 +1,5 @@
 const {test, assert, insp} = require('scar');
-const modulejs = require('../../lib/modulejs');
+const modulejs = require('../loader').modulejs;
 
 test('modulejs._private.uniq is function', () => {
     assert.equal(typeof modulejs._private.uniq, 'function');
