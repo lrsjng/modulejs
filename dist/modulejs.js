@@ -1,17 +1,16 @@
-/*! modulejs v1.11.0 - https://larsjung.de/modulejs/ */
+/*! modulejs v1.12.0 - https://larsjung.de/modulejs/ */
 'use strict';
 
 function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 
-(function (root, factory) {
+(function (factory) {
     // istanbul ignore else
     if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
         module.exports = factory();
-    } else {
-        root.modulejs = factory();
+    } else if ((typeof window === 'undefined' ? 'undefined' : _typeof(window)) === 'object') {
+        window.modulejs = factory(); // eslint-disable-line no-undef
     }
-})(undefined, function () {
-    // eslint-disable-line no-invalid-this
+})(function () {
     var OBJ_PROTO = Object.prototype;
 
     // Returns a function that returns `true` if `x` is of the correct
