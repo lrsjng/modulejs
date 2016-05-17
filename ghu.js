@@ -1,5 +1,5 @@
 const {resolve, join} = require('path');
-const {default: ghu, jszip, mapfn, read, remove, run, uglify, webpack, wrap, write} = require('ghu');
+const {ghu, jszip, mapfn, read, remove, run, uglify, webpack, wrap, write} = require('ghu');
 
 const NAME = 'modulejs';
 
