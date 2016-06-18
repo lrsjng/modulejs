@@ -12,11 +12,11 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 
 
-[{package.json,.eslintrc,.babelrc,.travis.yml}]
+[{package.json,.eslintrc,.travis.yml}]
 indent_size = 2
 
 
-[{*.md,*.jade}]
+[{*.md,*.pug}]
 trim_trailing_whitespace = false
 
 

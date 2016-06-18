@@ -1,35 +1,12 @@
 ---
   root: true
 
-  parser: babel-eslint
-
   env:
     es6: true
     node: true
 
   ecmaFeatures:
-    arrowFunctions: true
-    binaryLiterals: true
-    blockBindings: true
-    classes: false
-    defaultParams: true
-    destructuring: true
-    forOf: true
-    generators: true
-    globalReturn: true
-    jsx: false
-    modules: true
-    objectLiteralComputedProperties: true
-    objectLiteralDuplicateProperties: true
-    objectLiteralShorthandMethods: true
-    objectLiteralShorthandProperties: true
-    octalLiterals: true
-    regexUFlag: true
-    regexYFlag: true
-    spread: true
-    superInFunctions: false
-    templateStrings: true
-    unicodeCodePointEscapes: true
+    ecmaVersion: 6
 
   rules:
     array-bracket-spacing: [2, never]

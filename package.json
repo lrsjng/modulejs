@@ -1,6 +1,6 @@
 {
   "name": "@lrsjng/modulejs",
-  "version": "1.14.0",
+  "version": "1.15.0",
   "description": "Lightweight JavaScript module system.",
   "homepage": "https://larsjung.de/modulejs/",
   "bugs": "https://github.com/lrsjng/modulejs/issues",
@@ -13,25 +13,22 @@
   "main": "dist/modulejs.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "node -r babel-core/register test/tests.js",
+    "test": "node test/tests.js",
     "check": "npm run -s lint && npm run -s test",
-    "cover": "babel-node node_modules/.bin/isparta cover --dir coverage --report text --report html test/tests.js",
-    "ghu": "node -r babel-core/register ghu.js",
-    "build": "npm run -s ghu release",
+    "cover": "isparta cover --dir coverage --report text --report html test/tests.js",
+    "build": "node ghu release",
     "precommit": "npm run -s check && npm run -s build"
   },
   "devDependencies": {
-    "babel-cli": "6.9.0",
-    "babel-core": "6.9.0",
-    "babel-eslint": "6.0.4",
+    "babel-loader": "6.2.4",
     "babel-preset-es2015": "6.9.0",
-    "eslint": "2.10.2",
-    "ghu": "0.4.0",
+    "eslint": "2.13.0",
+    "ghu": "0.6.0",
     "isparta": "4.0.0",
-    "scar": "0.10.1",
+    "scar": "0.11.0",
     "sinon": "1.17.4"
   },
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=6.0.0"
   }
 }

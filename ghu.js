@@ -36,8 +36,11 @@ ghu.task('build:script', runtime => {
             loaders: [
                 {
                     include: [LIB],
-                    loader: 'babel',
-                    query: {cacheDirectory: true}
+                    loader: 'babel-loader',
+                    query: {
+                        cacheDirectory: true,
+                        presets: ['es2015']
+                    }
                 }
             ]
         }
