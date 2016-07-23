@@ -1,6 +1,5 @@
-const {test, assert} = require('scar');
-const sinon = require('sinon');
-const modulejs = require('../loader').modulejs;
+const {test, assert, spy} = require('scar');
+const {modulejs} = require('../loader');
 
 test('modulejs.require is function', () => {
     const modjs = modulejs.create();
@@ -37,14 +36,14 @@ test('modulejs.require() returns instance for known id', () => {
 
 test('modulejs.require() calls constructor exactly once per id', () => {
     const modjs = modulejs.create();
-    const spy = sinon.spy();
-    modjs.define('a', spy);
+    const fn = spy();
+    modjs.define('a', fn);
 
-    assert.equal(spy.callCount, 0);
+    assert.equal(fn.calls.length, 0);
     modjs.require('a');
-    assert.equal(spy.callCount, 1);
+    assert.equal(fn.calls.length, 1);
     modjs.require('a');
-    assert.equal(spy.callCount, 1);
+    assert.equal(fn.calls.length, 1);
 });
 
 test('modulejs.require() returns always the same instance per id', () => {

@@ -1,10 +1,10 @@
 const {test, assert} = require('scar');
-const modulejs = require('../loader').modulejs;
+const {modulejs} = require('../loader');
 
-test('modulejs._private.definitions is plain object', () => {
-    assert.equal(typeof modulejs._private.definitions, 'object');
+test('modulejs._d is plain object', () => {
+    assert.equal(typeof modulejs._d, 'object');
 });
 
-test('modulejs._private.definitions is empty', () => {
-    assert.equal(Object.keys(modulejs._private.definitions).length, 0);
+test('modulejs._d is empty', () => {
+    assert.equal(Object.keys(modulejs._d).length, 0);
 });

@@ -1,6 +1,5 @@
 build
 coverage
 dist
-es5
 node_modules
 **/vendor

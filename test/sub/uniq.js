@@ -1,13 +1,11 @@
 const {test, assert, insp} = require('scar');
-const modulejs = require('../loader').modulejs;
+const {util} = require('../loader');
 
-test('modulejs._private.uniq is function', () => {
-    assert.equal(typeof modulejs._private.uniq, 'function');
+test('util.uniq is function', () => {
+    assert.equal(typeof util.uniq, 'function');
 });
 
 [
-    [null, []],
-    [undefined, []],
     [[], []],
     [[1], [1]],
     [[1, 2], [1, 2]],
@@ -15,12 +13,24 @@ test('modulejs._private.uniq is function', () => {
     [[1, 1, 2], [1, 2]],
     [[1, 2, 2], [1, 2]],
     [[1, 2, 3, 4], [1, 2, 3, 4]],
-    [[1, 2, 3, 2, 1, 4, 3], [1, 2, 3, 4]],
-    ['ababc', ['a', 'b', 'c']]
+    [[1, 2, 3, 2, 1, 4, 3], [1, 2, 3, 4]]
 ].forEach(x => {
     const [arg, exp] = x;
 
-    test(`modulejs._private.uniq(${insp(arg)}) === ${insp(exp)}`, () => {
-        assert.deepEqual(modulejs._private.uniq(arg), exp);
+    test(`util.uniq(${insp(arg)}) === ${insp(exp)}`, () => {
+        assert.deepEqual(util.uniq(arg), exp);
+    });
+});
+
+[
+    undefined,
+    null,
+    0,
+    1,
+    'a',
+    /a/
+].forEach(x => {
+    test(`util.uniq(${insp(x)}) throws`, () => {
+        assert.throws(() => util.uniq(x), /TypeError/);
     });
 });

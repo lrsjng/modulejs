@@ -1,4 +1,4 @@
-/*! modulejs v1.15.0 - https://larsjung.de/modulejs/ */
+/*! modulejs v2.0.0 - https://larsjung.de/modulejs/ */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -53,75 +53,17 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var OBJ_PROTO = Object.prototype;
+	var _require = __webpack_require__(1);
 
-	// Returns a function that returns `true` if `x` is of the correct
-	// `type`, otherwise `false`.
-	var _create_is_x_fn = function _create_is_x_fn(type) {
-	    return function (x) {
-	        return OBJ_PROTO.toString.call(x) === '[object ' + type + ']';
-	    };
-	};
+	var assert = _require.assert;
+	var forOwn = _require.forOwn;
+	var has = _require.has;
+	var resolve = _require.resolve;
 
-	// Type checking functions.
-	var isArray = _create_is_x_fn('Array');
-	var isFunction = _create_is_x_fn('Function');
-	var isString = _create_is_x_fn('String');
-
-	// Short cut for `hasOwnProperty`.
-	var has = function has(x, id) {
-	    return x !== undefined && x !== null && OBJ_PROTO.hasOwnProperty.call(x, id);
-	};
-
-	// Iterates over all elements af an array or all own keys of an object.
-	var each = function each(x, fn) {
-	    if (x && x.length) {
-	        for (var i = 0, l = x.length; i < l; i += 1) {
-	            fn(x[i], i, x);
-	        }
-	    } else {
-	        for (var k in x) {
-	            if (has(x, k)) {
-	                fn(x[k], k, x);
-	            }
-	        }
-	    }
-	};
-
-	// Returns `true` if `x` contains `val`, otherwise `false`.
-	var contains = function contains(x, val) {
-	    if (x && x.length) {
-	        for (var i = 0, l = x.length; i < l; i += 1) {
-	            if (x[i] === val) {
-	                return true;
-	            }
-	        }
-	    }
-	    return false;
-	};
-
-	// Returns an new array containing no duplicates. Preserves first
-	// occurence and order.
-	var uniq = function uniq(x) {
-	    var result = [];
-	    each(x, function (val) {
-	        if (!contains(result, val)) {
-	            result.push(val);
-	        }
-	    });
-	    return result;
-	};
-
-	// Throws an error if `expression` is falsy.
-	var assert = function assert(expression, message) {
-	    if (!expression) {
-	        throw new Error('[modulejs] ' + message);
-	    }
-	};
 
 	var create = function create() {
 	    // Module definitions.
@@ -129,58 +71,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    // Module instances.
 	    var instances = {};
-
-	    // Resolves `id` to an object. If `mixed` is `true` only returns
-	    // dependency-IDs. If `mixed` is an object it is used instead of the
-	    // already memorized `instances` to allow mock-dependencies. `stack`
-	    // is used internal to check for circular dependencies.
-	    var resolve = function resolve(id, mixed, stack) {
-	        // check arguments
-	        assert(isString(id), 'id must be string: ' + id);
-	        var onlyDepIds = mixed === true;
-	        var resolvedInstances = (onlyDepIds ? undefined : mixed) || instances;
-
-	        // if a module is required that was already created return that
-	        // object
-	        if (!onlyDepIds && has(resolvedInstances, id)) {
-	            return resolvedInstances[id];
-	        }
-
-	        // check if `id` is defined
-	        var def = definitions[id];
-	        assert(def, 'id not defined: ' + id);
-
-	        // copy resolve stack and add this `id`
-	        stack = (stack || []).slice();
-	        stack.push(id);
-
-	        // if `onlyDepIds` this will hold the dependency-IDs, otherwise it
-	        // will hold the dependency-objects
-	        var deps = [];
-
-	        each(def.deps, function (depId) {
-	            // check for circular dependencies
-	            assert(!contains(stack, depId), 'circular dependencies: ' + depId + ' in ' + stack);
-
-	            if (onlyDepIds) {
-	                deps = deps.concat(resolve(depId, mixed, stack));
-	                deps.push(depId);
-	            } else {
-	                deps.push(resolve(depId, mixed, stack));
-	            }
-	        });
-
-	        // if `onlyDepIds` return only dependency-ids in right order
-	        if (onlyDepIds) {
-	            return uniq(deps);
-	        }
-
-	        // create, memorize and return object
-	        // const obj = def.fn(...deps);
-	        var obj = def.fn.apply(undefined, deps);
-	        resolvedInstances[id] = obj;
-	        return obj;
-	    };
 
 	    // Defines a module for `id: String`, optional `deps: Array[String]`,
 	    // `def: mixed`.
@@ -192,15 +82,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            def = _ref[1];
 	        }
 	        // check arguments
-	        assert(isString(id), 'id must be string: ' + id);
+	        assert(typeof id === 'string', 'id must be string: ' + id);
 	        assert(!has(definitions, id), 'id already defined: ' + id);
-	        assert(isArray(deps), 'deps must be array: ' + id);
+	        assert(Array.isArray(deps), 'deps must be array: ' + id);
 
 	        // accept definition
 	        definitions[id] = {
 	            id: id,
 	            deps: deps,
-	            fn: isFunction(def) ? def : function () {
+	            fn: typeof def === 'function' ? def : function () {
 	                return def;
 	            }
 	        };
@@ -209,7 +99,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Returns an instance for `id`. If a `mocks` object is given, it is
 	    // used to resolve the dependencies.
 	    var require = function require(id, mocks) {
-	        return resolve(id, mocks);
+	        assert(typeof id === 'string', 'id must be string: ' + id);
+	        return resolve(definitions, mocks || instances, id);
 	    };
 
 	    // Returns an object that holds infos about the current definitions
@@ -217,25 +108,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var state = function state() {
 	        var res = {};
 
-	        each(definitions, function (def, id) {
+	        forOwn(definitions, function (def, id) {
 	            res[id] = {
 
 	                // direct dependencies
 	                deps: def.deps.slice(),
 
 	                // transitive dependencies
-	                reqs: resolve(id, true),
+	                reqs: resolve(definitions, null, id),
 
 	                // already initiated/required
 	                init: has(instances, id)
 	            };
 	        });
 
-	        each(definitions, function (def, id) {
+	        forOwn(definitions, function (def, id) {
 	            var inv = [];
 
-	            each(definitions, function (def2, id2) {
-	                if (contains(res[id2].reqs, id)) {
+	            forOwn(definitions, function (def2, id2) {
+	                if (res[id2].reqs.indexOf(id) >= 0) {
 	                    inv.push(id2);
 	                }
 	            });
@@ -251,9 +142,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var log = function log(inv) {
 	        var out = '\n';
 
-	        each(state(), function (st, id) {
+	        forOwn(state(), function (st, id) {
 	            var list = inv ? st.reqd : st.reqs;
-	            out += (st.init ? '* ' : '  ') + id + ' -> [ ' + list.join(', ') + ' ]\n';
+	            out += (st.init ? '*' : ' ') + ' ' + id + ' -> [ ' + list.join(', ') + ' ]\n';
 	        });
 
 	        return out;
@@ -265,23 +156,105 @@ return /******/ (function(modules) { // webpackBootstrap
 	        log: log,
 	        require: require,
 	        state: state,
-	        _private: {
-	            assert: assert,
-	            contains: contains,
-	            definitions: definitions,
-	            each: each,
-	            has: has,
-	            instances: instances,
-	            isArray: isArray,
-	            isFunction: isFunction,
-	            isString: isString,
-	            resolve: resolve,
-	            uniq: uniq
-	        }
+	        _d: definitions,
+	        _i: instances
 	    };
 	};
 
 	module.exports = create();
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	// Throws an error if `expr` is falsy.
+	var assert = function assert(expr, msg) {
+	    if (!expr) {
+	        throw new Error("[modulejs] " + msg);
+	    }
+	};
+
+	// Iterates over all own props of an object.
+	var forOwn = function forOwn(x, fn) {
+	    Object.keys(x).forEach(function (k) {
+	        return fn(x[k], k);
+	    });
+	};
+
+	// Short cut for `hasOwnProperty`.
+	var has = function has(x, id) {
+	    return (x || {}).hasOwnProperty(id);
+	};
+
+	// Returns an new array containing no duplicates. Preserves first occurence and
+	// order.
+	var uniq = function uniq(x) {
+	    var cache = {};
+	    return x.filter(function (val) {
+	        var res = !cache[val];
+	        cache[val] = 1;
+	        return res;
+	    });
+	};
+
+	// Resolves `id` to an object for the given definitions `defs` and already
+	// instantiated objects `insts`. Adds any new instances to `insts`. If `insts`
+	// is null it only resolves dependency IDs.
+	// `stack` is used internal to check for circular dependencies.
+	var resolve = function resolve(defs, insts, id, stack) {
+	    var onlyDepIds = !insts;
+
+	    // if a module is required that was already created return that object
+	    if (!onlyDepIds && has(insts, id)) {
+	        return insts[id];
+	    }
+
+	    // check if `id` is defined
+	    var def = defs[id];
+	    assert(def, "id not defined: " + id);
+
+	    // copy resolve stack and add this `id`
+	    stack = (stack || []).slice();
+	    stack.push(id);
+
+	    // if `onlyDepIds` this will hold the dependency-IDs, otherwise it
+	    // will hold the dependency-objects
+	    var deps = [];
+
+	    def.deps.forEach(function (depId) {
+	        // check for circular dependencies
+	        assert(stack.indexOf(depId) < 0, "circular dependencies: " + depId + " in " + stack);
+
+	        var depDeps = resolve(defs, insts, depId, stack);
+	        if (onlyDepIds) {
+	            deps = deps.concat(depDeps);
+	            deps.push(depId);
+	        } else {
+	            deps.push(depDeps);
+	        }
+	    });
+
+	    if (onlyDepIds) {
+	        // return only dependency-ids in correct order
+	        return uniq(deps);
+	    }
+
+	    // create, memorize and return object
+	    // using def.fn(...deps) instead would cost ~120B uglified
+	    var obj = def.fn.apply(undefined, deps);
+	    insts[id] = obj;
+	    return obj;
+	};
+
+	module.exports = {
+	    assert: assert,
+	    forOwn: forOwn,
+	    has: has,
+	    resolve: resolve,
+	    uniq: uniq
+	};
 
 /***/ }
 /******/ ])

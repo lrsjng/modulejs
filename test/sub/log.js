@@ -1,5 +1,5 @@
 const {test, assert} = require('scar');
-const modulejs = require('../loader').modulejs;
+const {modulejs} = require('../loader');
 
 test('modulejs.log() no definitions', () => {
     const modjs = modulejs.create();

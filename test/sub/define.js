@@ -1,5 +1,5 @@
 const {test, assert, insp} = require('scar');
-const modulejs = require('../loader').modulejs;
+const {modulejs} = require('../loader');
 
 test('modulejs.define is function', () => {
     assert.equal(typeof modulejs.define, 'function');
@@ -33,7 +33,7 @@ test('modulejs.define() throws if id already defined', () => {
 
 test('modulejs.define(id)  ->  .define(id, [], function () { return undefined; })', () => {
     const modjs = modulejs.create();
-    const defs = modjs._private.definitions;
+    const defs = modjs._d;
     const id = 'a';
     assert.equal(modjs.define(id), undefined);
 
@@ -46,7 +46,7 @@ test('modulejs.define(id)  ->  .define(id, [], function () { return undefined; }
 
 test('modulejs.define(id, fn)  ->  .define(id, [], fn)', () => {
     const modjs = modulejs.create();
-    const defs = modjs._private.definitions;
+    const defs = modjs._d;
     const id = 'a';
     const fn = () => {};
     assert.equal(modjs.define(id, fn), undefined);
@@ -59,7 +59,7 @@ test('modulejs.define(id, fn)  ->  .define(id, [], fn)', () => {
 
 test('modulejs.define(id, arr, fn)  ->  .define(id, arr, fn)', () => {
     const modjs = modulejs.create();
-    const defs = modjs._private.definitions;
+    const defs = modjs._d;
     const id = 'a';
     const arr = [];
     const fn = () => {};
@@ -84,7 +84,7 @@ test('modulejs.define(id, arr, fn)  ->  .define(id, arr, fn)', () => {
 ].forEach(x => {
     test(`modulejs.define(id, ${insp(x)})  ->  .define(id, [], function () { return ${insp(x)}; })`, () => {
         const modjs = modulejs.create();
-        const defs = modjs._private.definitions;
+        const defs = modjs._d;
         const id = 'a';
         assert.equal(modjs.define(id, x), undefined);
 
@@ -98,7 +98,7 @@ test('modulejs.define(id, arr, fn)  ->  .define(id, arr, fn)', () => {
 
     test(`modulejs.define(id, arr, ${insp(x)})  ->  .define(id, arr, function () { return ${insp(x)}; })`, () => {
         const modjs = modulejs.create();
-        const defs = modjs._private.definitions;
+        const defs = modjs._d;
         const id = 'a';
         const arr = [];
         assert.equal(modjs.define(id, x), undefined);

@@ -1,9 +1,8 @@
 const {test, assert, insp} = require('scar');
-const modulejs = require('../loader').modulejs;
-const has = modulejs._private.has;
+const {util} = require('../loader');
 
-test('modulejs._private.has is function', () => {
-    assert.equal(typeof has, 'function');
+test('util.has is function', () => {
+    assert.equal(typeof util.has, 'function');
 });
 
 [
@@ -21,7 +20,7 @@ test('modulejs._private.has is function', () => {
 ].forEach(x => {
     const [arg1, arg2, exp] = x;
 
-    test(`modulejs._private.has(${insp(arg1)}, ${insp(arg2)}) === ${insp(exp)}`, () => {
-        assert.equal(has(arg1, arg2), exp);
+    test(`util.has(${insp(arg1)}, ${insp(arg2)}) === ${insp(exp)}`, () => {
+        assert.equal(util.has(arg1, arg2), exp);
     });
 });
