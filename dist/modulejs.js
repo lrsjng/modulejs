@@ -1,4 +1,4 @@
-/*! modulejs v2.0.0 - https://larsjung.de/modulejs/ */
+/*! modulejs v2.1.0 - https://larsjung.de/modulejs/ */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();

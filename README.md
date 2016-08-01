@@ -32,17 +32,17 @@ THE SOFTWARE.
 
 [web]: https://larsjung.de/modulejs/
 [github]: https://github.com/lrsjng/modulejs
-[npm]: https://www.npmjs.org/package/@lrsjng/modulejs
+[npm]: https://www.npmjs.org/package/modulejs
 [gemnasium]: https://gemnasium.com/lrsjng/modulejs
 [travis]: https://travis-ci.org/lrsjng/modulejs
 
 [license-img]: https://img.shields.io/badge/license-MIT-a0a060.svg?style=flat-square
 [web-img]: https://img.shields.io/badge/web-larsjung.de/modulejs-a0a060.svg?style=flat-square
 [github-img]: https://img.shields.io/badge/github-lrsjng/modulejs-a0a060.svg?style=flat-square
-[npm-img]: https://img.shields.io/badge/npm-@lrsjng/modulejs-a0a060.svg?style=flat-square
+[npm-img]: https://img.shields.io/badge/npm-modulejs-a0a060.svg?style=flat-square
 [bower-img]: https://img.shields.io/badge/bower-lrsjng/modulejs-a0a060.svg?style=flat-square
 
-[npm-v-img]: https://img.shields.io/npm/v/@lrsjng/modulejs.svg?style=flat-square
-[npm-dm-img]: https://img.shields.io/npm/dm/@lrsjng/modulejs.svg?style=flat-square
+[npm-v-img]: https://img.shields.io/npm/v/modulejs.svg?style=flat-square
+[npm-dm-img]: https://img.shields.io/npm/dm/modulejs.svg?style=flat-square
 [gemnasium-img]: https://img.shields.io/gemnasium/lrsjng/modulejs.svg?style=flat-square
 [travis-img]: https://img.shields.io/travis/lrsjng/modulejs.svg?style=flat-square
