@@ -7,6 +7,7 @@ const PROPS = [
     'log',
     'require',
     'state',
+    'unregister',
     '_d',
     '_i'
 ];
