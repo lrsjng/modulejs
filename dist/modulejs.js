@@ -1,4 +1,4 @@
-/*! modulejs v2.1.0 - https://larsjung.de/modulejs/ */
+/*! modulejs v2.2.0 - https://larsjung.de/modulejs/ */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -57,13 +57,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _require = __webpack_require__(1);
-
-	var assert = _require.assert;
-	var forOwn = _require.forOwn;
-	var has = _require.has;
-	var resolve = _require.resolve;
-
+	var _require = __webpack_require__(1),
+	    assert = _require.assert,
+	    forOwn = _require.forOwn,
+	    has = _require.has,
+	    resolve = _require.resolve;
 
 	var create = function create() {
 	    // Module definitions.
