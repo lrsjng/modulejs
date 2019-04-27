@@ -24,7 +24,7 @@ ghu.task('clean', () => {
 
 ghu.task('build:script', runtime => {
     return read(`${LIB}/${NAME}.js`)
-        .then(webpack(webpack.cfg_umd(NAME, [LIB]), {showStats: false}))
+        .then(webpack(webpack.cfg_umd(NAME, [LIB])))
         .then(wrap(runtime.commentJs))
         .then(write(`${DIST}/${NAME}.js`, {overwrite: true}))
         .then(write(`${BUILD}/${NAME}-${runtime.pkg.version}.js`, {overwrite: true}))

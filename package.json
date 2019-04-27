@@ -1,6 +1,6 @@
 {
   "name": "modulejs",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "Lightweight JavaScript module system.",
   "homepage": "https://larsjung.de/modulejs/",
   "bugs": "https://github.com/lrsjng/modulejs/issues",
@@ -15,18 +15,18 @@
     "lint": "eslint .",
     "test": "node test",
     "check": "npm run -s lint && npm run -s test",
-    "cover": "isparta cover --dir coverage --report text --report html test",
+    "cover": "nyc --require @babel/register --reporter text --reporter html node test",
     "build": "node ghu release",
     "precommit": "npm run -s check && npm run -s build"
   },
   "devDependencies": {
-    "@babel/core": "7.4.3",
-    "@babel/preset-env": "7.4.3",
-    "babel-loader": "8.0.5",
+    "@babel/core": "7.4.4",
+    "@babel/preset-env": "7.4.4",
+    "@babel/register": "7.4.4",
     "eslint": "5.16.0",
-    "ghu": "0.17.0",
-    "isparta": "4.1.1",
-    "scar": "1.5.0"
+    "ghu": "0.19.0",
+    "nyc": "14.0.0",
+    "scar": "1.7.0"
   },
   "engines": {
     "node": ">=8.0.0"
