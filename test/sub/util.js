@@ -7,7 +7,7 @@ test('util is object', () => {
 
 const PROPS = [
     'assert',
-    'forOwn',
+    'for_own',
     'has',
     'resolve',
     'uniq'

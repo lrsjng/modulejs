@@ -1,8 +1,8 @@
 const {test, assert, insp, spy} = require('scar');
 const {util} = require('../loader');
 
-test('util.forOwn is function', () => {
-    assert.equal(typeof util.forOwn, 'function');
+test('util.for_own is function', () => {
+    assert.equal(typeof util.for_own, 'function');
 });
 
 [
@@ -22,10 +22,10 @@ test('util.forOwn is function', () => {
     Object.create({a: 1, b: 2}),
     'abc'
 ].forEach(x => {
-    test(`util.forOwn(${insp(x)}, fn)`, () => {
+    test(`util.for_own(${insp(x)}, fn)`, () => {
         const keys = Object.keys(x);
         const fn = spy();
-        assert.equal(util.forOwn(x, fn), undefined);
+        assert.equal(util.for_own(x, fn), undefined);
         assert.equal(fn.calls.length, keys.length);
         fn.calls.forEach((call, idx) => {
             assert.equal(call.args[1], keys[idx]);
@@ -38,8 +38,8 @@ test('util.forOwn is function', () => {
     undefined,
     null
 ].forEach(x => {
-    test(`util.forOwn(${insp(x)}, fn) throws`, () => {
+    test(`util.for_own(${insp(x)}, fn) throws`, () => {
         const fn = spy();
-        assert.throws(() => util.forOwn(x, fn));
+        assert.throws(() => util.for_own(x, fn));
     });
 });

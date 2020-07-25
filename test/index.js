@@ -2,7 +2,7 @@ const {test} = require('scar');
 
 require('./sub/util');
 require('./sub/assert');
-require('./sub/forOwn');
+require('./sub/for_own');
 require('./sub/has');
 require('./sub/resolve');
 require('./sub/uniq');
