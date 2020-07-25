@@ -101,7 +101,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 var _require = __webpack_require__(1),
     assert = _require.assert,
-    forOwn = _require.forOwn,
+    for_own = _require.for_own,
     has = _require.has,
     resolve = _require.resolve;
 
@@ -145,7 +145,7 @@ var create = function create() {
 
   var state = function state() {
     var res = {};
-    forOwn(definitions, function (def, id) {
+    for_own(definitions, function (def, id) {
       res[id] = {
         // direct dependencies
         deps: def.deps.slice(),
@@ -155,9 +155,9 @@ var create = function create() {
         init: has(instances, id)
       };
     });
-    forOwn(definitions, function (def, id) {
+    for_own(definitions, function (def, id) {
       var inv = [];
-      forOwn(definitions, function (def2, id2) {
+      for_own(definitions, function (def2, id2) {
         if (res[id2].reqs.indexOf(id) >= 0) {
           inv.push(id2);
         }
@@ -171,7 +171,7 @@ var create = function create() {
 
   var log = function log(inv) {
     var out = '\n';
-    forOwn(state(), function (st, id) {
+    for_own(state(), function (st, id) {
       var list = inv ? st.reqd : st.reqs;
       out += "".concat(st.init ? '*' : ' ', " ").concat(id, " -> [ ").concat(list.join(', '), " ]\n");
     });
@@ -203,7 +203,7 @@ var assert = function assert(expr, msg) {
 }; // Iterates over all own props of an object.
 
 
-var forOwn = function forOwn(x, fn) {
+var for_own = function for_own(x, fn) {
   Object.keys(x).forEach(function (k) {
     return fn(x[k], k);
   });
@@ -272,7 +272,7 @@ var resolve = function resolve(defs, insts, id, stack) {
 
 module.exports = {
   assert: assert,
-  forOwn: forOwn,
+  for_own: for_own,
   has: has,
   resolve: resolve,
   uniq: uniq
