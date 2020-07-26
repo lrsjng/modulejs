@@ -15,5 +15,6 @@ require('./sub/instances');
 require('./sub/log');
 require('./sub/require');
 require('./sub/state');
+require('./sub/unregister');
 
 test.cli({sync: true});
