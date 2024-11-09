@@ -1,4 +1,4 @@
-/*! modulejs v2.10.0 - undefined */
+/*! modulejs v2.11.0 - undefined */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
